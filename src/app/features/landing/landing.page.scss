@@ -102,21 +102,69 @@ ion-content {
 .hero {
   position: relative;
   padding: l.$space-16 0;
+  min-height: 700px;
   overflow: hidden;
   isolation: isolate;
+  display: flex;
+  align-items: center;
 
-  &-glow {
+  &-bg {
     position: absolute;
     inset: 0;
-    background: c.$grad-hero-accent;
+    z-index: -2;
+    background-image: url('https://cdn.cloudflare.steamstatic.com/steam/apps/570/library_hero.jpg');
+    background-size: cover;
+    background-position: center 35%;
+    background-repeat: no-repeat;
+    filter: saturate(0.8) brightness(0.55);
+    transform: scale(1.05);
+    animation: hero-bg-zoom 30s ease-in-out infinite alternate;
+  }
+
+  &-overlay {
+    position: absolute;
+    inset: 0;
     z-index: -1;
     pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.65) 60%, c.$bg-base 100%),
+      radial-gradient(ellipse at top right, rgba(29, 185, 84, 0.18) 0%, transparent 55%);
   }
 
   &-content {
     text-align: center;
     animation: fade-in-up a.$dur-slow a.$ease-out;
+    position: relative;
   }
+
+  &-trusted-heroes {
+    margin-top: l.$space-12;
+    display: flex;
+    justify-content: center;
+    gap: l.$space-2;
+    flex-wrap: wrap;
+
+    img {
+      width: 80px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: l.$radius-md;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      box-shadow: l.$shadow-md;
+      transition: transform a.$dur-base a.$ease-out, border-color a.$dur-base a.$ease-out;
+      filter: saturate(1.1);
+
+      &:hover {
+        transform: translateY(-4px) scale(1.05);
+        border-color: c.$accent-primary;
+      }
+    }
+  }
+}
+
+@keyframes hero-bg-zoom {
+  0%   { transform: scale(1.05); }
+  100% { transform: scale(1.15); }
 }
 
 .eyebrow {
@@ -213,6 +261,42 @@ ion-content {
   display: flex;
   flex-direction: column;
   gap: l.$space-3;
+}
+
+.chat-context {
+  display: flex;
+  align-items: center;
+  gap: l.$space-4;
+  padding: l.$space-4;
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-lg;
+  margin-bottom: l.$space-2;
+}
+
+.chat-hero-portrait {
+  width: 96px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: l.$radius-md;
+  border: 2px solid c.$accent-primary;
+  flex-shrink: 0;
+}
+
+.chat-context-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-context-name {
+  font-weight: t.$fw-bold;
+  font-size: t.$fs-body;
+}
+
+.chat-context-meta {
+  color: c.$text-subdued;
+  font-size: t.$fs-small;
 }
 
 .chat-message {

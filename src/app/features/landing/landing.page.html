@@ -13,7 +13,8 @@
   </header>
 
   <section class="hero">
-    <div class="hero-glow"></div>
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
     <div class="container hero-content">
       <span class="eyebrow">Análisis con IA · Powered by Gemini</span>
       <h1 class="text-display">
@@ -32,28 +33,37 @@
           Ver ejemplo →
         </a>
       </div>
+
+      <div class="hero-trusted-heroes" aria-hidden="true">
+        <img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/juggernaut.png" alt="" />
+        <img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/invoker.png" alt="" />
+        <img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/pudge.png" alt="" />
+        <img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/sniper.png" alt="" />
+        <img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/luna.png" alt="" />
+        <img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/sand_king.png" alt="" />
+      </div>
     </div>
   </section>
 
   <section class="how-it-works">
     <div class="container">
-      <h2 class="text-h1 section-title">Cómo funciona</h2>
+      <h2 class="text-h1 section-title" appAnimateOnScroll>Cómo funciona</h2>
       <div class="steps">
-        <div class="step">
+        <div class="step" appAnimateOnScroll [animationDelay]="0">
           <span class="step-number">1</span>
           <h3 class="text-h3">Pegá tu match_id</h3>
           <p class="text-subdued">
             Lo encontrás en tu perfil de Dota 2 o en Dotabuff/OpenDota.
           </p>
         </div>
-        <div class="step">
+        <div class="step" appAnimateOnScroll [animationDelay]="120">
           <span class="step-number">2</span>
           <h3 class="text-h3">Elegí tu posición</h3>
           <p class="text-subdued">
             Un grid visual de 5 Radiant + 5 Dire para identificar quién jugaste.
           </p>
         </div>
-        <div class="step">
+        <div class="step" appAnimateOnScroll [animationDelay]="240">
           <span class="step-number">3</span>
           <h3 class="text-h3">Recibí tu análisis</h3>
           <p class="text-subdued">
@@ -67,12 +77,21 @@
 
   <section id="example" class="example">
     <div class="container">
-      <h2 class="text-h1 section-title">Mirá un análisis real</h2>
-      <p class="text-subdued section-subtitle">
+      <h2 class="text-h1 section-title" appAnimateOnScroll>Mirá un análisis real</h2>
+      <p class="text-subdued section-subtitle" appAnimateOnScroll [animationDelay]="100">
         Análisis de un Juggernaut pos 1 con AFK aliado vs comp Pudge + Sand King.
       </p>
       <div class="chat-preview">
-        <div class="chat-message assistant">
+        <div class="chat-context" appAnimateOnScroll="scale" [animationDelay]="0">
+          <img class="chat-hero-portrait"
+            src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/juggernaut.png"
+            alt="Juggernaut" />
+          <div class="chat-context-info">
+            <span class="chat-context-name">Juggernaut · Pos 1 carry</span>
+            <span class="chat-context-meta">Match 8788049131 · KDA 1/6/3 · Derrota</span>
+          </div>
+        </div>
+        <div class="chat-message assistant" appAnimateOnScroll="slide-left" [animationDelay]="150">
           <strong>Errores principales:</strong>
           <ul>
             <li>3 muertes a Pudge en los primeros 6 min — perdiste lane y le diste
@@ -83,7 +102,7 @@
               cada vez que tu equipo iniciaba pelea.</li>
           </ul>
         </div>
-        <div class="chat-message user">
+        <div class="chat-message user" appAnimateOnScroll="slide-right" [animationDelay]="350">
           ¿Y si en vez de Mjollnir hubiera ido por Maelstrom + BKB primero?
         </div>
       </div>
@@ -92,9 +111,9 @@
 
   <section class="pricing">
     <div class="container">
-      <h2 class="text-h1 section-title">Planes</h2>
+      <h2 class="text-h1 section-title" appAnimateOnScroll>Planes</h2>
       <div class="plan-cards">
-        <article class="plan-card free">
+        <article class="plan-card free" appAnimateOnScroll [animationDelay]="0">
           <span class="plan-tag">FREE</span>
           <p class="plan-price">$0<span>/ mes</span></p>
           <ul class="plan-features">
@@ -106,7 +125,7 @@
             Empezar gratis
           </a>
         </article>
-        <article class="plan-card pro">
+        <article class="plan-card pro" appAnimateOnScroll [animationDelay]="150">
           <span class="plan-tag pro-tag">PRO</span>
           <p class="plan-price">Muy pronto</p>
           <ul class="plan-features">
@@ -125,29 +144,29 @@
 
   <section class="faq">
     <div class="container">
-      <h2 class="text-h1 section-title">Preguntas frecuentes</h2>
-      <details class="faq-item">
+      <h2 class="text-h1 section-title" appAnimateOnScroll>Preguntas frecuentes</h2>
+      <details class="faq-item" appAnimateOnScroll [animationDelay]="0">
         <summary>¿Necesito tener perfil público en Dota 2?</summary>
         <p class="text-subdued">
           Sí. En Dota 2 hay que activar "Expose Public Match Data" en settings
           para que tu partida sea visible para servicios externos como OpenDota.
         </p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" appAnimateOnScroll [animationDelay]="80">
         <summary>¿Mis datos están seguros?</summary>
         <p class="text-subdued">
           Solo guardamos tu email y la lista de matches que analizaste.
           La info de cada partida viene de OpenDota, que es pública.
         </p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" appAnimateOnScroll [animationDelay]="160">
         <summary>¿La IA realmente sabe de Dota 2?</summary>
         <p class="text-subdued">
           Usamos Gemini con un system prompt diseñado para analizar el meta actual,
           builds, lane matchups y decisiones macro/micro de jugadores 1k-5k MMR.
         </p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" appAnimateOnScroll [animationDelay]="240">
         <summary>¿Puedo cancelar Pro cuando quiera?</summary>
         <p class="text-subdued">
           Cuando esté disponible, sí. Sin permanencia ni letra chica.

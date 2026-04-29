@@ -54,3 +54,34 @@ html, body {
 .text-h3 { font-size: t.$fs-h3; font-weight: t.$fw-bold; line-height: t.$lh-normal; }
 .text-subdued { color: c.$text-subdued; }
 .text-mute    { color: c.$text-mute; }
+
+// === Scroll-triggered animations ===
+// Aplicadas por la directiva [appAnimateOnScroll].
+// Estado inicial: invisible + offset; estado final (cuando entra al viewport): se reveal.
+.animate-target {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 700ms a.$ease-out,
+    transform 700ms a.$ease-out;
+  will-change: opacity, transform;
+}
+
+.animate-target.anim-fade        { transform: none; }
+.animate-target.anim-scale       { transform: scale(0.92); transform-origin: center; }
+.animate-target.anim-slide-left  { transform: translateX(-32px); }
+.animate-target.anim-slide-right { transform: translateX(32px); }
+
+.animate-target.is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+// Respeta usuarios que prefieren menos movimiento.
+@media (prefers-reduced-motion: reduce) {
+  .animate-target {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
