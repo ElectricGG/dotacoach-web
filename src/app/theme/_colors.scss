@@ -1,0 +1,34 @@
+// === Backgrounds ===
+$bg-base:        #000000;
+$bg-elevated:    #121212;
+$bg-tinted:      #1A1A1A;
+$bg-press:       #2A2A2A;
+$bg-overlay:     rgba(0, 0, 0, 0.65);
+
+// === Text ===
+$text-base:      #FFFFFF;
+$text-subdued:   #B3B3B3;
+$text-mute:      #6E6E6E;
+$text-disabled:  #4A4A4A;
+$text-on-accent: #000000;
+
+// === Brand accent (Spotify-style) ===
+$accent-primary: #1DB954;
+$accent-hover:   #1ED760;
+$accent-press:   #169C46;
+
+// === Dota team colors ===
+$dota-radiant:   #92A525;
+$dota-dire:      #C23C2A;
+
+// === Semantic ===
+$danger:         #E53935;
+$warning:        #F2A900;
+$success:        $accent-primary;
+$info:           #4FA3FF;
+
+// === Gradients ===
+$grad-hero-radiant: linear-gradient(180deg, #1A4D1A 0%, $bg-base 70%);
+$grad-hero-dire:    linear-gradient(180deg, #4D1A1A 0%, $bg-base 70%);
+$grad-card-default: linear-gradient(135deg, #1F1F1F 0%, #141414 100%);
+$grad-hero-accent:  radial-gradient(ellipse at top, rgba(29, 185, 84, 0.25) 0%, $bg-base 60%);

@@ -1,0 +1,42 @@
+@use '../app/theme/colors' as c;
+
+// Override Ionic CSS variables con paleta Spotify-dark adaptada a Dota
+:root {
+  --ion-background-color: #{c.$bg-base};
+  --ion-background-color-rgb: 0, 0, 0;
+
+  --ion-text-color: #{c.$text-base};
+  --ion-text-color-rgb: 255, 255, 255;
+
+  --ion-item-background: #{c.$bg-elevated};
+  --ion-card-background: #{c.$bg-elevated};
+  --ion-toolbar-background: #{c.$bg-base};
+  --ion-tab-bar-background: #{c.$bg-elevated};
+
+  --ion-border-color: #{c.$bg-tinted};
+
+  --ion-color-primary: #{c.$accent-primary};
+  --ion-color-primary-rgb: 29, 185, 84;
+  --ion-color-primary-contrast: #{c.$text-on-accent};
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #{c.$accent-press};
+  --ion-color-primary-tint: #{c.$accent-hover};
+
+  --ion-color-danger: #{c.$danger};
+  --ion-color-danger-rgb: 229, 57, 53;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #ca322e;
+  --ion-color-danger-tint: #e85049;
+
+  --ion-color-success: #{c.$success};
+  --ion-color-success-rgb: 29, 185, 84;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-shade: #{c.$accent-press};
+  --ion-color-success-tint: #{c.$accent-hover};
+
+  --ion-color-step-50:  #{c.$bg-elevated};
+  --ion-color-step-100: #{c.$bg-tinted};
+  --ion-color-step-150: #{c.$bg-press};
+
+  --ion-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

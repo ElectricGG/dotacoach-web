@@ -1,0 +1,172 @@
+<ion-content [fullscreen]="true" [scrollY]="true">
+  <header class="landing-header">
+    <div class="container">
+      <a class="brand" routerLink="/">
+        <span class="brand-mark">⚔</span>
+        <span class="brand-text">DotaCoach</span>
+      </a>
+      <nav class="landing-nav">
+        <a routerLink="/login" class="nav-link">Iniciar sesión</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm">Probar gratis</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+      <span class="eyebrow">Análisis con IA · Powered by Gemini</span>
+      <h1 class="text-display">
+        Tu coach de Dota 2,<br />
+        <span class="accent">cuando lo necesites</span>
+      </h1>
+      <p class="hero-subtitle">
+        Pegá tu match_id. La IA estudia tus items, tus muertes, tus peleas
+        y te dice exactamente qué mejorar — sin frases de manual.
+      </p>
+      <div class="hero-ctas">
+        <a routerLink="/register" class="btn btn-primary btn-lg">
+          Probar gratis
+        </a>
+        <a href="#example" class="btn btn-ghost btn-lg">
+          Ver ejemplo →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="text-h1 section-title">Cómo funciona</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-number">1</span>
+          <h3 class="text-h3">Pegá tu match_id</h3>
+          <p class="text-subdued">
+            Lo encontrás en tu perfil de Dota 2 o en Dotabuff/OpenDota.
+          </p>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <h3 class="text-h3">Elegí tu posición</h3>
+          <p class="text-subdued">
+            Un grid visual de 5 Radiant + 5 Dire para identificar quién jugaste.
+          </p>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <h3 class="text-h3">Recibí tu análisis</h3>
+          <p class="text-subdued">
+            La IA te detalla errores, aciertos y consejos accionables.
+            Podés seguir preguntando durante 24 horas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="example" class="example">
+    <div class="container">
+      <h2 class="text-h1 section-title">Mirá un análisis real</h2>
+      <p class="text-subdued section-subtitle">
+        Análisis de un Juggernaut pos 1 con AFK aliado vs comp Pudge + Sand King.
+      </p>
+      <div class="chat-preview">
+        <div class="chat-message assistant">
+          <strong>Errores principales:</strong>
+          <ul>
+            <li>3 muertes a Pudge en los primeros 6 min — perdiste lane y le diste
+              snowball para Blink Dagger.</li>
+            <li>0 daño a torres en 28 min — Juggernaut tiene que presionar
+              estructuras tras peleas.</li>
+            <li>Sin BKB contra Sand King + Witch Doctor — moriste por aislamiento
+              cada vez que tu equipo iniciaba pelea.</li>
+          </ul>
+        </div>
+        <div class="chat-message user">
+          ¿Y si en vez de Mjollnir hubiera ido por Maelstrom + BKB primero?
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing">
+    <div class="container">
+      <h2 class="text-h1 section-title">Planes</h2>
+      <div class="plan-cards">
+        <article class="plan-card free">
+          <span class="plan-tag">FREE</span>
+          <p class="plan-price">$0<span>/ mes</span></p>
+          <ul class="plan-features">
+            <li>✓ Análisis ilimitados (durante MVP)</li>
+            <li>✓ Chat de seguimiento 24h</li>
+            <li>✓ Soporte vía Discord</li>
+          </ul>
+          <a routerLink="/register" class="btn btn-primary btn-block">
+            Empezar gratis
+          </a>
+        </article>
+        <article class="plan-card pro">
+          <span class="plan-tag pro-tag">PRO</span>
+          <p class="plan-price">Muy pronto</p>
+          <ul class="plan-features">
+            <li>✓ Análisis multi-jugador</li>
+            <li>✓ Histórico ilimitado</li>
+            <li>✓ Chat extendido + prioridad</li>
+            <li>✓ Soporte 1-on-1</li>
+          </ul>
+          <button class="btn btn-ghost btn-block" disabled>
+            Avisame cuando esté
+          </button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="container">
+      <h2 class="text-h1 section-title">Preguntas frecuentes</h2>
+      <details class="faq-item">
+        <summary>¿Necesito tener perfil público en Dota 2?</summary>
+        <p class="text-subdued">
+          Sí. En Dota 2 hay que activar "Expose Public Match Data" en settings
+          para que tu partida sea visible para servicios externos como OpenDota.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Mis datos están seguros?</summary>
+        <p class="text-subdued">
+          Solo guardamos tu email y la lista de matches que analizaste.
+          La info de cada partida viene de OpenDota, que es pública.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>¿La IA realmente sabe de Dota 2?</summary>
+        <p class="text-subdued">
+          Usamos Gemini con un system prompt diseñado para analizar el meta actual,
+          builds, lane matchups y decisiones macro/micro de jugadores 1k-5k MMR.
+        </p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Puedo cancelar Pro cuando quiera?</summary>
+        <p class="text-subdued">
+          Cuando esté disponible, sí. Sin permanencia ni letra chica.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <footer class="landing-footer">
+    <div class="container">
+      <p class="text-mute">
+        © 2026 DotaCoach · Dota 2 es marca registrada de Valve Corporation.
+        Este proyecto no está afiliado con Valve.
+      </p>
+      <div class="footer-links">
+        <a class="text-subdued" href="#">Términos</a>
+        <a class="text-subdued" href="#">Privacidad</a>
+        <a class="text-subdued" href="#">Contacto</a>
+      </div>
+    </div>
+  </footer>
+</ion-content>

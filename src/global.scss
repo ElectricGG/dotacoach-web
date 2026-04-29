@@ -1,0 +1,56 @@
+/*
+ * App Global CSS — Spotify-dark theme adaptado a Dota
+ */
+
+@use './app/theme/colors' as c;
+@use './app/theme/typography' as t;
+@use './app/theme/layout' as l;
+@use './app/theme/animations' as a;
+
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+
+@import "./theme/variables.scss";
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: c.$bg-base;
+  color: c.$text-base;
+  font-family: t.$font-family-primary;
+}
+
+::selection {
+  background: c.$accent-primary;
+  color: c.$text-on-accent;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: c.$bg-base; }
+::-webkit-scrollbar-thumb { background: c.$bg-press; border-radius: l.$radius-pill; }
+::-webkit-scrollbar-thumb:hover { background: c.$bg-tinted; }
+
+.text-display {
+  font-size: t.$fs-display;
+  font-weight: t.$fw-black;
+  line-height: t.$lh-tight;
+  letter-spacing: -0.02em;
+}
+.text-h1 { font-size: t.$fs-h1; font-weight: t.$fw-bold; line-height: t.$lh-tight; }
+.text-h2 { font-size: t.$fs-h2; font-weight: t.$fw-bold; line-height: t.$lh-tight; }
+.text-h3 { font-size: t.$fs-h3; font-weight: t.$fw-bold; line-height: t.$lh-normal; }
+.text-subdued { color: c.$text-subdued; }
+.text-mute    { color: c.$text-mute; }
