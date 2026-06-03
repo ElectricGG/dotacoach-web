@@ -1,0 +1,272 @@
+<div class="counterpicks-page">
+  <header class="page-header">
+    <a routerLink="/app/home" class="back-link">← Volver</a>
+    <h1 class="text-display">Contrapicks</h1>
+    <p class="text-subdued">
+      Elegí el lado (enemigos o aliados) y tocá héroes en la grilla para marcarlos.
+      Las recomendaciones se actualizan en vivo basadas en winrate real de OpenDota.
+    </p>
+  </header>
+
+  <section class="picks-summary">
+    <div class="band band-enemy">
+      <span class="band-label">Enemigos</span>
+      <div class="band-list">
+        @for (h of enemies(); track h.id) {
+          <button class="picked-mini enemy" type="button" (click)="removePick(h)" [title]="'Quitar ' + h.localizedName">
+            <img [src]="heroPortraitUrl(h.internalName)" [alt]="h.localizedName" loading="lazy" />
+          </button>
+        }
+        @for (i of [0, 1, 2, 3, 4].slice(enemies().length); track i) {
+          <span class="picked-mini empty">?</span>
+        }
+      </div>
+    </div>
+    <div class="band band-ally">
+      <span class="band-label">Aliados</span>
+      <div class="band-list">
+        @for (h of allies(); track h.id) {
+          <button class="picked-mini ally" type="button" (click)="removePick(h)" [title]="'Quitar ' + h.localizedName">
+            <img [src]="heroPortraitUrl(h.internalName)" [alt]="h.localizedName" loading="lazy" />
+          </button>
+        }
+        @for (i of [0, 1, 2, 3, 4].slice(allies().length); track i) {
+          <span class="picked-mini empty">?</span>
+        }
+      </div>
+    </div>
+    @if (enemies().length + allies().length > 0) {
+      <button class="btn btn-ghost btn-sm clear-btn" (click)="clearAll()">Limpiar</button>
+    }
+  </section>
+
+  <div class="main-grid">
+    <section class="picker">
+      <div class="picker-head">
+        <h3 class="text-h3">Héroes</h3>
+        <input
+          type="search"
+          class="search"
+          placeholder="Buscar héroe..."
+          [value]="query()"
+          (input)="query.set($any($event.target).value)" />
+      </div>
+
+      <div class="side-toggle" role="tablist" aria-label="Marcando como">
+        <span class="side-toggle-label text-mute">Marcando como:</span>
+        <button
+          type="button"
+          class="side-btn"
+          [class.active]="currentSide() === 'enemy'"
+          (click)="setSide('enemy')">
+          <span class="side-dot enemy-dot"></span>
+          Enemigos
+        </button>
+        <button
+          type="button"
+          class="side-btn"
+          [class.active]="currentSide() === 'ally'"
+          (click)="setSide('ally')">
+          <span class="side-dot ally-dot"></span>
+          Aliados
+        </button>
+      </div>
+
+      @if (heroesError(); as e) {
+        <div class="alert alert-error">{{ e }}</div>
+      } @else if (loadingHeroes()) {
+        <div class="text-subdued">Cargando héroes...</div>
+      } @else {
+        <div class="hero-grid">
+          @for (h of filteredHeroes(); track h.id) {
+            <button
+              type="button"
+              class="hero-tile"
+              [class.enemy]="pickOf(h.id) === 'enemy'"
+              [class.ally]="pickOf(h.id) === 'ally'"
+              [title]="h.localizedName"
+              (click)="togglePick(h)">
+              <img [src]="heroPortraitUrl(h.internalName)" [alt]="h.localizedName" loading="lazy" />
+              <span class="hero-tile-name">{{ h.localizedName }}</span>
+              @if (pickOf(h.id) === 'enemy') {
+                <span class="badge enemy-badge">E</span>
+              } @else if (pickOf(h.id) === 'ally') {
+                <span class="badge ally-badge">A</span>
+              }
+            </button>
+          }
+        </div>
+      }
+    </section>
+
+    <aside class="recs">
+      <h3 class="text-h3">
+        Recomendaciones
+        @if (loadingRecs()) {
+          <span class="spinner" aria-label="Cargando"></span>
+        }
+      </h3>
+
+      <div class="role-chips">
+        <span class="role-chips-label text-mute">Tu rol:</span>
+        @for (opt of roleOptions; track opt.value) {
+          <button
+            type="button"
+            class="role-chip"
+            [class.active]="targetRole() === opt.value"
+            (click)="setRole(opt.value)">
+            {{ opt.label }}
+          </button>
+        }
+      </div>
+
+      @if (allies().length > 0) {
+        <div class="ally-info">
+          @if (targetRole()) {
+            Excluyendo {{ allies().length }} aliado{{ allies().length === 1 ? '' : 's' }} de las recomendaciones.
+          } @else {
+            Excluyendo {{ allies().length }} aliado{{ allies().length === 1 ? '' : 's' }} y penalizando overlap de rol.
+          }
+        </div>
+      }
+
+      @if (!canRequest()) {
+        <p class="text-subdued">
+          Marca al menos un héroe enemigo para ver counters.
+        </p>
+      } @else if (recsError(); as e) {
+        <div class="alert alert-error">{{ e }}</div>
+      } @else if (recommendations().length === 0 && !loadingRecs()) {
+        <p class="text-subdued">
+          Sin datos de matchup para esta combinación. Probá con menos enemigos.
+        </p>
+      } @else {
+        <ol class="rec-list">
+          @for (r of recommendations(); track r.heroId) {
+            <li class="rec-item">
+              <div class="rec-row">
+                <img class="rec-portrait" [src]="heroPortraitUrl(r.heroInternalName)" [alt]="r.heroLocalizedName" loading="lazy" />
+                <div class="rec-info">
+                  <div class="rec-name">{{ r.heroLocalizedName }}</div>
+                  <div class="rec-stats">
+                    <span class="rec-advantage">{{ formatAdvantage(r.advantageVsLineup) }} wr</span>
+                    <span class="text-mute">· {{ formatGames(r.sampleGames) }} partidas</span>
+                    @if (r.breakdown.length < enemies().length) {
+                      <span class="text-mute coverage">· {{ r.breakdown.length }}/{{ enemies().length }} matchups</span>
+                    }
+                  </div>
+                  <div class="rec-breakdown">
+                    @for (b of r.breakdown; track b.enemyHeroId) {
+                      <span class="rec-vs" [class.good]="b.winrate >= 0.52" [class.bad]="b.winrate <= 0.48">
+                        vs {{ b.enemyHeroLocalizedName }}: {{ (b.winrate * 100).toFixed(0) }}%
+                      </span>
+                    }
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="build-toggle"
+                  [class.expanded]="expandedHeroId() === r.heroId"
+                  (click)="toggleBuild(r.heroId)"
+                  [attr.aria-expanded]="expandedHeroId() === r.heroId">
+                  @if (expandedHeroId() === r.heroId) { Ocultar } @else { Build }
+                </button>
+              </div>
+
+              @if (expandedHeroId() === r.heroId) {
+                <div class="build-panel">
+                  <div class="build-tabs" role="tablist">
+                    <button
+                      type="button"
+                      class="build-tab"
+                      [class.active]="buildMode() === 'popular'"
+                      (click)="setBuildMode(r.heroId, 'popular')">
+                      Build más usada
+                    </button>
+                    <button
+                      type="button"
+                      class="build-tab"
+                      [class.active]="buildMode() === 'ai'"
+                      (click)="setBuildMode(r.heroId, 'ai')"
+                      [title]="enemies().length === 0 ? 'Sin enemigos seleccionados, la IA dará build estándar' : ''">
+                      Build con IA
+                      @if (enemies().length > 0) {
+                        <span class="badge-enemy-count">{{ enemies().length }}</span>
+                      }
+                    </button>
+                  </div>
+
+                  @if (loadingBuildFor() === r.heroId) {
+                    <div class="text-mute">
+                      @if (buildMode() === 'ai') { Generando build con IA… (3-5s) } @else { Cargando build… }
+                    </div>
+                  } @else if (buildError(); as e) {
+                    <div class="alert alert-error">{{ e }}</div>
+                  } @else if (buildMode() === 'popular') {
+                    @if (popularBuildFor(r.heroId); as build) {
+                      @for (phase of build.phases; track phase.phaseKey) {
+                        @if (phase.items.length > 0) {
+                          <div class="build-phase">
+                            <h4 class="build-phase-label">{{ phase.phaseLabel }}</h4>
+                            <div class="build-items">
+                              @for (item of phase.items; track item.itemId) {
+                                <div class="build-item" [title]="item.displayName + ' · ' + item.cost + ' oro'">
+                                  <img class="build-item-img" [src]="itemImgUrl(item.imgPath)" [alt]="item.displayName" loading="lazy" />
+                                  <span class="build-item-name">{{ item.displayName }}</span>
+                                  @if (item.cost > 0) {
+                                    <span class="build-item-cost">{{ formatCost(item.cost) }}</span>
+                                  }
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        }
+                      }
+                      <p class="build-note text-mute">Top 6 items más comprados según OpenDota, sin contextualizar al enemigo.</p>
+                    }
+                  } @else {
+                    @if (aiBuildFor(r.heroId); as build) {
+                      @if (build.strategySummary) {
+                        <div class="ai-summary">
+                          <span class="coach-dot" aria-hidden="true"></span>
+                          {{ build.strategySummary }}
+                        </div>
+                      }
+                      @if (build.phases.length === 0) {
+                        <p class="text-mute">La IA no pudo generar build válida. Probá con menos enemigos o "Build más usada".</p>
+                      }
+                      @for (phase of build.phases; track phase.phaseKey) {
+                        <div class="build-phase">
+                          <h4 class="build-phase-label">{{ phase.phaseLabel }}</h4>
+                          <ul class="ai-items">
+                            @for (item of phase.items; track item.itemId) {
+                              <li class="ai-item">
+                                <img class="build-item-img" [src]="itemImgUrl(item.imgPath)" [alt]="item.displayName" loading="lazy" />
+                                <div class="ai-item-text">
+                                  <div class="ai-item-head">
+                                    <span class="ai-item-name">{{ item.displayName }}</span>
+                                    @if (item.cost > 0) {
+                                      <span class="ai-item-cost">{{ formatCost(item.cost) }}</span>
+                                    }
+                                  </div>
+                                  @if (item.reason) {
+                                    <p class="ai-item-reason">{{ item.reason }}</p>
+                                  }
+                                </div>
+                              </li>
+                            }
+                          </ul>
+                        </div>
+                      }
+                      <p class="build-note text-mute">Sugerido por IA usando matchups y habilidades reales del lineup enemigo.</p>
+                    }
+                  }
+                </div>
+              }
+            </li>
+          }
+        </ol>
+      }
+    </aside>
+  </div>
+</div>

@@ -22,6 +22,11 @@ export const appShellRoutes: Routes = [
           import('../sessions-list/sessions-list.page').then((m) => m.SessionsListPage),
       },
       {
+        path: 'counterpicks',
+        loadComponent: () =>
+          import('../counterpicks/counterpicks.page').then((m) => m.CounterpicksPage),
+      },
+      {
         path: 'sessions/:id',
         loadComponent: () =>
           import('../chat/chat.page').then((m) => m.ChatPage),
