@@ -1,0 +1,18 @@
+@use '../../../theme/colors' as c;
+
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #{c.$bg-elevated} 0%,
+    #{c.$bg-tinted} 50%,
+    #{c.$bg-elevated} 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

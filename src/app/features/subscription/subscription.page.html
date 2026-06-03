@@ -1,0 +1,73 @@
+<div class="subscription-page">
+  <header class="page-header">
+    <a routerLink="/app/profile" class="back-link">← Mi perfil</a>
+    <h1 class="text-display">Mi plan</h1>
+    <p class="text-subdued">
+      Aquí vas a poder gestionar tu suscripción cuando habilitemos los pagos.
+    </p>
+  </header>
+
+  @if (notified()) {
+    <div class="alert alert-success" role="alert">
+      ✓ Listo, te avisamos al email cuando Pro esté disponible.
+    </div>
+  }
+
+  <div class="plan-cards">
+    <article class="plan-card free" [class.current]="user()?.tier === 'Free'">
+      @if (user()?.tier === 'Free') {
+        <span class="current-badge">Plan actual</span>
+      }
+      <span class="plan-tag">FREE</span>
+      <p class="plan-price">$0<span> / mes</span></p>
+      <ul class="plan-features">
+        <li>✓ 2 análisis al mes</li>
+        <li>✓ Hasta 5 mensajes por análisis</li>
+        <li>✓ Chat de seguimiento por 24 horas</li>
+        <li>✓ Soporte vía Discord</li>
+      </ul>
+      @if (user()?.tier === 'Free') {
+        <button class="btn btn-ghost btn-block" disabled>
+          Tu plan actual
+        </button>
+      } @else {
+        <button class="btn btn-ghost btn-block">
+          Cambiar a Free
+        </button>
+      }
+    </article>
+
+    <article class="plan-card pro">
+      <span class="plan-tag pro-tag">PRO</span>
+      <span class="coming-soon">Muy pronto</span>
+      <p class="plan-price">$3<span> / mes</span></p>
+      <ul class="plan-features">
+        <li>✓ <strong>Análisis ilimitados</strong></li>
+        <li>✓ Mensajes ilimitados por análisis</li>
+        <li>✓ Histórico completo de sesiones</li>
+        <li>✓ Chat de seguimiento extendido (7 días)</li>
+        <li>✓ Modelo Gemini Pro (más inteligente)</li>
+        <li>✓ Soporte prioritario</li>
+      </ul>
+      <button class="btn btn-primary btn-block" (click)="notifyMe()">
+        Avísame cuando esté disponible
+      </button>
+    </article>
+  </div>
+
+  <section class="info-section">
+    <h3 class="text-h3">¿Por qué cobramos por Pro?</h3>
+    <p class="text-subdued">
+      El análisis con IA tiene costo por cada partida (la API de Gemini se factura
+      por tokens consumidos). El plan Free se mantiene viable cubriendo los costos
+      con los usuarios Pro.
+    </p>
+    <p class="text-subdued">
+      Cuando habilitemos los pagos vas a poder cancelar cuando quieras, sin
+      permanencia ni letra chica.
+    </p>
+    <a href="mailto:soporte@dotacoach.app" class="link-accent">
+      ¿Tienes sugerencias para Pro? Mándanos un correo →
+    </a>
+  </section>
+</div>

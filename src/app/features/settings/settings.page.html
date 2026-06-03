@@ -1,0 +1,60 @@
+<div class="settings-page">
+  <header class="page-header">
+    <a routerLink="/app/home" class="back-link">← Volver</a>
+    <h1 class="text-display">Configuración</h1>
+  </header>
+
+  <section class="card">
+    <h3 class="text-h3">Sobre la aplicación</h3>
+    <dl class="info-list">
+      <div>
+        <dt>Versión</dt>
+        <dd>{{ version }}</dd>
+      </div>
+      <div>
+        <dt>API</dt>
+        <dd class="mono">{{ apiUrl }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="card">
+    <h3 class="text-h3">Almacenamiento local</h3>
+    <p class="text-subdued">
+      Tu navegador guarda tu sesión y la lista de sesiones recientes para evitar
+      llamar al servidor en cada visita. Puedes borrar este caché cuando quieras.
+    </p>
+    <button class="btn btn-ghost" (click)="clearLocalCache()">
+      Borrar historial local
+    </button>
+  </section>
+
+  <section class="card">
+    <h3 class="text-h3">Cuenta</h3>
+    <a routerLink="/app/profile" class="link-row">
+      <span>Mi perfil</span>
+      <span class="text-mute">→</span>
+    </a>
+    <a routerLink="/app/subscription" class="link-row">
+      <span>Mi plan</span>
+      <span class="text-mute">→</span>
+    </a>
+    <button class="link-row danger" (click)="logout()">
+      <span>Cerrar sesión</span>
+      <span class="text-mute">→</span>
+    </button>
+  </section>
+
+  <section class="card">
+    <h3 class="text-h3">Créditos</h3>
+    <p class="text-subdued">
+      Análisis con <a href="https://ai.google.dev" target="_blank" rel="noopener" class="link-accent">Google Gemini</a>.
+      Datos de partidas vía <a href="https://www.opendota.com" target="_blank" rel="noopener" class="link-accent">OpenDota API</a>.
+      Imágenes oficiales de héroes desde el CDN de Steam.
+    </p>
+    <p class="text-mute">
+      Dota 2 es marca registrada de Valve Corporation. Este proyecto no está
+      afiliado con Valve.
+    </p>
+  </section>
+</div>

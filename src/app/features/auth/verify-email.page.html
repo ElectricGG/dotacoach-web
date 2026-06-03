@@ -1,0 +1,67 @@
+<ion-content [fullscreen]="true">
+  <div class="auth-layout">
+    <a routerLink="/" class="brand-link">
+      <span class="brand-mark">⚔</span> DotaCoach
+    </a>
+
+    <section class="auth-card">
+      <h1 class="text-h1">Verifica tu correo</h1>
+      <p class="text-subdued auth-subtitle">
+        Te enviamos un código de 6 dígitos a
+        <strong class="email-target">{{ email() }}</strong>.
+        Lo escribes acá y listo.
+      </p>
+
+      @if (error()) {
+        <div class="alert alert-error" role="alert">{{ error() }}</div>
+      }
+
+      <div class="otp-grid" (paste)="onPaste($event)">
+        @for (digit of digitsValue(); track $index) {
+          <input
+            #digit
+            type="text"
+            class="otp-digit"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="1"
+            [value]="digit"
+            [disabled]="isLoading()"
+            (input)="onDigitInput($index, $event)"
+            (keydown)="onDigitKeydown($index, $event)" />
+        }
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary btn-block"
+        [disabled]="!isComplete() || isLoading()"
+        (click)="confirm()">
+        @if (isLoading()) {
+          Verificando...
+        } @else {
+          Confirmar código
+        }
+      </button>
+
+      <div class="resend-row">
+        @if (resendCooldown() > 0) {
+          <span class="text-mute">
+            Reenviar disponible en {{ resendCooldown() }}s
+          </span>
+        } @else {
+          <button type="button" class="link-button" (click)="resend()">
+            Reenviar código
+          </button>
+        }
+      </div>
+
+      <div class="divider"><span>o</span></div>
+
+      <p class="auth-footer">
+        ¿Email equivocado?
+        <a routerLink="/register" class="link-accent">Regístrate de nuevo</a>
+      </p>
+    </section>
+  </div>
+</ion-content>

@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true">
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="brand" routerLink="/app/home">
+        <span class="brand-mark">⚔</span>
+        <span class="brand-text">DotaCoach</span>
+      </a>
+
+      <nav class="primary-nav">
+        <a routerLink="/app/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Inicio</a>
+        <a routerLink="/app/new" routerLinkActive="active" class="nav-link">Nueva</a>
+        <a routerLink="/app/sessions" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Sesiones</a>
+      </nav>
+
+      <div class="user-menu" [class.open]="menuOpen()">
+        <button
+          class="avatar-button"
+          (click)="toggleMenu()"
+          [attr.aria-expanded]="menuOpen()">
+          <span class="avatar">{{ userInitial() }}</span>
+          <span class="email-label">{{ user()?.email }}</span>
+          <span class="chevron">▾</span>
+        </button>
+
+        @if (menuOpen()) {
+          <div class="menu-dropdown" role="menu">
+            <div class="menu-header">
+              <span class="header-label">Conectado como</span>
+              <strong class="header-email">{{ user()?.email }}</strong>
+              <span class="tier-pill">{{ user()?.tier }}</span>
+            </div>
+            <div class="menu-section">
+              <a routerLink="/app/profile" class="menu-item" (click)="closeMenu()" role="menuitem">
+                <span class="menu-label">Mi perfil</span>
+                <span class="menu-chevron" aria-hidden="true">›</span>
+              </a>
+              <a routerLink="/app/subscription" class="menu-item" (click)="closeMenu()" role="menuitem">
+                <span class="menu-label">Mi plan</span>
+                <span class="menu-chevron" aria-hidden="true">›</span>
+              </a>
+              <a routerLink="/app/settings" class="menu-item" (click)="closeMenu()" role="menuitem">
+                <span class="menu-label">Configuración</span>
+                <span class="menu-chevron" aria-hidden="true">›</span>
+              </a>
+            </div>
+            <div class="menu-divider" aria-hidden="true"></div>
+            <button class="menu-item menu-item--danger" (click)="logout()" role="menuitem">
+              <span class="menu-label">Cerrar sesión</span>
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  @if (menuOpen()) {
+    <div class="menu-backdrop" (click)="closeMenu()"></div>
+  }
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+</ion-content>

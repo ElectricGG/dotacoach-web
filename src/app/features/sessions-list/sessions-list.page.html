@@ -1,0 +1,51 @@
+<div class="sessions-page">
+  <header class="page-header">
+    <div>
+      <h1 class="text-display">Tus sesiones</h1>
+      <p class="text-subdued">
+        Análisis recientes desde este navegador. Para crear una nueva sesión usa
+        <a routerLink="/app/new" class="link-accent">Nueva</a>.
+      </p>
+    </div>
+    @if (hasEntries()) {
+      <button class="btn btn-ghost btn-sm" (click)="clearAll()">
+        Borrar historial local
+      </button>
+    }
+  </header>
+
+  @if (hasEntries()) {
+    <div class="sessions-grid">
+      @for (entry of entries(); track entry.sessionId) {
+        <a class="session-card" [routerLink]="['/app/sessions', entry.sessionId]">
+          <img
+            class="card-portrait"
+            [src]="heroPortraitUrl(entry.heroLocalizedName)"
+            [alt]="entry.heroLocalizedName"
+            loading="lazy" />
+          <div class="card-info">
+            <div class="card-hero">{{ entry.heroLocalizedName }}</div>
+            <div class="card-meta">
+              <span>{{ positionLabel(entry.playerSlot, entry.laneRole) }}</span>
+              <span>·</span>
+              <span>Match {{ entry.matchId }}</span>
+            </div>
+            <div class="card-meta">
+              <span>{{ entry.createdAt | date:'medium' }}</span>
+            </div>
+            <div class="card-status" [class]="'status-' + entry.status.toLowerCase()">
+              {{ entry.status }}
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <span class="empty-icon">📊</span>
+      <h2 class="text-h2">Todavía no tienes análisis</h2>
+      <p class="text-subdued">Empieza creando el primero — solo necesitas tu ID de partida.</p>
+      <a routerLink="/app/new" class="btn btn-primary">Crear análisis</a>
+    </div>
+  }
+</div>

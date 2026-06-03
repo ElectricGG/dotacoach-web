@@ -1,0 +1,92 @@
+@use '../../../theme/colors' as c;
+@use '../../../theme/typography' as t;
+@use '../../../theme/layout' as l;
+@use '../../../theme/animations' as a;
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: c.$bg-overlay;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: l.$space-5;
+  animation: fade-in a.$dur-fast a.$ease-out;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 440px;
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-xl;
+  padding: l.$space-6;
+  box-shadow: l.$shadow-xl;
+  animation: pop-in a.$dur-base a.$ease-out;
+}
+
+.dialog-title {
+  margin: 0 0 l.$space-3;
+  font-size: t.$fs-h3;
+  font-weight: t.$fw-bold;
+}
+
+.dialog-message {
+  margin: 0 0 l.$space-6;
+  color: c.$text-subdued;
+  line-height: t.$lh-relaxed;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: l.$space-2;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: l.$space-3 l.$space-5;
+  border: none;
+  border-radius: l.$radius-pill;
+  font-family: inherit;
+  font-weight: t.$fw-bold;
+  font-size: t.$fs-small;
+  cursor: pointer;
+  transition: all a.$dur-fast a.$ease-out;
+
+  &-ghost {
+    background: transparent;
+    color: c.$text-base;
+    border: 1px solid c.$bg-press;
+    &:hover { background: c.$bg-tinted; }
+  }
+
+  &-primary {
+    background: c.$accent-primary;
+    color: c.$text-on-accent;
+    &:hover { background: c.$accent-hover; }
+  }
+
+  &-danger {
+    background: c.$danger;
+    color: #ffffff;
+    &:hover { background: #ca322e; }
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

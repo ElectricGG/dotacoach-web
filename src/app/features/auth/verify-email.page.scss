@@ -1,0 +1,75 @@
+@use '../../theme/colors' as c;
+@use '../../theme/typography' as t;
+@use '../../theme/layout' as l;
+@use '../../theme/animations' as a;
+
+.email-target {
+  color: c.$accent-primary;
+  word-break: break-all;
+}
+
+.otp-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: l.$space-2;
+  margin: l.$space-6 0;
+
+  @media (max-width: 360px) {
+    gap: l.$space-1;
+  }
+}
+
+.otp-digit {
+  width: 100%;
+  aspect-ratio: 1 / 1.2;
+  background: c.$bg-base;
+  border: 1px solid c.$bg-press;
+  border-radius: l.$radius-md;
+  color: c.$text-base;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: t.$fw-bold;
+  text-align: center;
+  caret-color: c.$accent-primary;
+  transition:
+    border-color a.$dur-fast a.$ease-out,
+    box-shadow a.$dur-fast a.$ease-out,
+    transform a.$dur-fast a.$ease-out;
+
+  &:focus {
+    outline: none;
+    border-color: c.$accent-primary;
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.resend-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: l.$space-4;
+  margin-bottom: l.$space-2;
+  font-size: t.$fs-small;
+}
+
+.link-button {
+  background: transparent;
+  border: none;
+  color: c.$accent-primary;
+  font-family: inherit;
+  font-size: t.$fs-small;
+  font-weight: t.$fw-medium;
+  cursor: pointer;
+  padding: l.$space-1 l.$space-2;
+  border-radius: l.$radius-sm;
+  transition: background a.$dur-fast a.$ease-out;
+
+  &:hover { background: rgba(29, 185, 84, 0.08); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}

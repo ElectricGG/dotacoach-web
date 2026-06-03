@@ -1,0 +1,116 @@
+<ion-content [fullscreen]="true">
+  <div class="auth-layout">
+    <a routerLink="/" class="brand-link">
+      <span class="brand-mark">⚔</span> DotaCoach
+    </a>
+
+    <form class="auth-card" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <h1 class="text-h1">Crear cuenta</h1>
+      <p class="text-subdued auth-subtitle">Empieza a analizar tus partidas en menos de un minuto.</p>
+
+      @if (error()) {
+        <div class="alert alert-error" role="alert">
+          {{ error() }}
+        </div>
+      }
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          inputmode="email"
+          placeholder="tu@email.com"
+          [class.has-error]="isInvalid('email')"
+          [disabled]="isLoading()" />
+        @if (isInvalid('email')) {
+          <span class="field-error">
+            @if (form.controls.email.errors?.['required']) {
+              Ingresa tu email.
+            } @else if (form.controls.email.errors?.['email']) {
+              El formato del email no es válido.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña <span class="text-mute">(mín. 8 caracteres)</span></label>
+        <div class="password-wrapper">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="new-password"
+            placeholder="••••••••"
+            [class.has-error]="isInvalid('password')"
+            [disabled]="isLoading()" />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+            {{ showPassword() ? '🙈' : '👁' }}
+          </button>
+        </div>
+        @if (isInvalid('password')) {
+          <span class="field-error">
+            @if (form.controls.password.errors?.['required']) {
+              Elige una contraseña.
+            } @else if (form.controls.password.errors?.['minlength']) {
+              Debe tener al menos 8 caracteres.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirmar contraseña</label>
+        <input
+          id="confirmPassword"
+          [type]="showPassword() ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          autocomplete="new-password"
+          placeholder="••••••••"
+          [class.has-error]="hasMismatch() || isInvalid('confirmPassword')"
+          [disabled]="isLoading()" />
+        @if (hasMismatch()) {
+          <span class="field-error">Las contraseñas no coinciden.</span>
+        } @else if (isInvalid('confirmPassword')) {
+          <span class="field-error">Confirma tu contraseña.</span>
+        }
+      </div>
+
+      <label class="checkbox-field">
+        <input type="checkbox" formControlName="acceptTerms" [disabled]="isLoading()" />
+        <span>
+          Acepto los <a href="#" class="link-accent">términos</a> y la
+          <a href="#" class="link-accent">política de privacidad</a>.
+        </span>
+      </label>
+      @if (isInvalid('acceptTerms')) {
+        <span class="field-error checkbox-error">Tienes que aceptar los términos para crear la cuenta.</span>
+      }
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="isLoading()">
+        @if (isLoading()) {
+          Creando cuenta...
+        } @else {
+          Crear cuenta
+        }
+      </button>
+
+      <div class="divider"><span>o</span></div>
+
+      <p class="auth-footer">
+        ¿Ya tienes cuenta?
+        <a routerLink="/login" class="link-accent">Inicia sesión</a>
+      </p>
+    </form>
+  </div>
+</ion-content>

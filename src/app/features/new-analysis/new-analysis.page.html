@@ -1,0 +1,224 @@
+<div class="new-analysis-page">
+  <header class="page-header">
+    <a routerLink="/app/home" class="back-link">← Volver</a>
+    <h1 class="text-display">Analizar partida</h1>
+    <p class="text-subdued">
+      Pega tu ID de partida, elige qué héroe jugaste y opcionalmente
+      cuéntale al coach algo del contexto.
+    </p>
+  </header>
+
+  @if (parsingMatchId() !== null) {
+    <div class="parsing-state">
+      <div class="parsing-icon">⏳</div>
+      <h2 class="text-h2">Tu partida está siendo procesada</h2>
+      <p class="text-subdued">
+        OpenDota está parseando los datos detallados del match
+        <strong>{{ parsingMatchId() }}</strong>. Esto suele tardar
+        2 a 5 minutos para partidas no profesionales.
+      </p>
+      <p class="text-mute parsing-poll-note">
+        Estamos revisando cada 30 segundos. Cuando esté lista te avisamos
+        con una notificación del navegador y abrimos el análisis automáticamente.
+      </p>
+      <div class="parsing-actions">
+        <button class="btn btn-primary" (click)="retryAfterParsing()">
+          Reintentar ahora
+        </button>
+        <button class="btn btn-ghost" (click)="cancelParsing()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  } @else if (isLoading()) {
+    <div class="loading-state">
+      <div class="loader"></div>
+      <h2 class="text-h2">
+        @switch (loadingPhase()) {
+          @case ('fetching') { Buscando tu partida en OpenDota... }
+          @case ('analyzing') { El coach está analizando tu juego... }
+          @default { Procesando... }
+        }
+      </h2>
+      <p class="text-subdued">Esto puede tardar 5 a 10 segundos.</p>
+    </div>
+  } @else {
+    <form
+      class="analysis-form"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+      novalidate>
+
+      @if (error()) {
+        <div class="alert alert-error" role="alert">{{ error() }}</div>
+      }
+
+      <!-- Step 1: Match ID -->
+      <section class="step">
+        <header class="step-head">
+          <span class="step-num">1</span>
+          <h2 class="text-h2">Match ID</h2>
+        </header>
+        <div class="step-body">
+          <div class="match-id-row">
+            <input
+              id="matchId"
+              class="input-mono"
+              type="text"
+              formControlName="matchId"
+              placeholder="8788049131"
+              inputmode="numeric"
+              autocomplete="off"
+              (paste)="onPasteMatchId($event)"
+              (input)="resetPreview()"
+              [class.has-error]="isInvalid('matchId')" />
+            <button
+              type="button"
+              class="btn btn-primary"
+              [disabled]="form.controls.matchId.invalid || loadingPlayers()"
+              (click)="loadPlayers()">
+              @if (loadingPlayers()) { Cargando… } @else { Ver jugadores }
+            </button>
+          </div>
+          @if (isInvalid('matchId')) {
+            <span class="field-error">
+              @if (form.controls.matchId.errors?.['required']) {
+                Pega el ID de partida.
+              } @else if (form.controls.matchId.errors?.['pattern']) {
+                Solo números (6-15 dígitos). Si pegaste una URL completa, te la limpiamos.
+              }
+            </span>
+          }
+          <p class="step-hint text-mute">
+            Lo encontrás en tu perfil de Dota 2 → Matches, o en
+            opendota.com / dotabuff.com. Aceptamos URLs completas.
+          </p>
+        </div>
+      </section>
+
+      <!-- Step 2: Hero picker -->
+      <section class="step">
+        <header class="step-head">
+          <span class="step-num">2</span>
+          <h2 class="text-h2">Elegí tu héroe</h2>
+        </header>
+        <div class="step-body">
+
+          @if (playersError()) {
+            <div class="alert alert-error">{{ playersError() }}</div>
+          }
+
+          @if (loadingPlayers()) {
+            <div class="players-loading">
+              <div class="loader-sm"></div>
+              <span class="text-subdued">Buscando héroes en la partida…</span>
+            </div>
+          } @else if (preview(); as p) {
+            <p class="step-hint text-mute">
+              @if (p.radiantWin !== null) {
+                Ganó {{ p.radiantWin ? 'Radiant' : 'Dire' }}.
+              }
+              Tocá el héroe que jugaste.
+            </p>
+
+            <div class="team-block radiant">
+              <span class="team-label radiant">RADIANT</span>
+              <div class="hero-grid">
+                @for (player of radiantPlayers(); track player.playerSlot) {
+                  <button
+                    type="button"
+                    class="hero-card"
+                    [class.selected]="isPlayerSelected(player)"
+                    (click)="selectPlayer(player)">
+                    <img
+                      class="hero-portrait"
+                      [src]="heroPortraitUrl(player.heroInternalName, player.heroLocalizedName)"
+                      [alt]="player.heroLocalizedName"
+                      loading="lazy" />
+                    <span class="hero-name">{{ player.heroLocalizedName }}</span>
+                    <span class="hero-meta">
+                      <span class="kda">{{ player.kills }}/{{ player.deaths }}/{{ player.assists }}</span>
+                      @if (laneRoleLabel(player.laneRole)) {
+                        <span class="role">{{ laneRoleLabel(player.laneRole) }}</span>
+                      }
+                    </span>
+                    @if (isPlayerSelected(player)) {
+                      <span class="hero-check">✓</span>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="team-block dire">
+              <span class="team-label dire">DIRE</span>
+              <div class="hero-grid">
+                @for (player of direPlayers(); track player.playerSlot) {
+                  <button
+                    type="button"
+                    class="hero-card"
+                    [class.selected]="isPlayerSelected(player)"
+                    (click)="selectPlayer(player)">
+                    <img
+                      class="hero-portrait"
+                      [src]="heroPortraitUrl(player.heroInternalName, player.heroLocalizedName)"
+                      [alt]="player.heroLocalizedName"
+                      loading="lazy" />
+                    <span class="hero-name">{{ player.heroLocalizedName }}</span>
+                    <span class="hero-meta">
+                      <span class="kda">{{ player.kills }}/{{ player.deaths }}/{{ player.assists }}</span>
+                      @if (laneRoleLabel(player.laneRole)) {
+                        <span class="role">{{ laneRoleLabel(player.laneRole) }}</span>
+                      }
+                    </span>
+                    @if (isPlayerSelected(player)) {
+                      <span class="hero-check">✓</span>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+
+            @if (isInvalid('playerSlot')) {
+              <span class="field-error">Tocá tu héroe arriba.</span>
+            }
+          } @else {
+            <div class="players-empty text-subdued">
+              Pega un ID de partida arriba y toca <strong>Ver jugadores</strong> para
+              elegir tu héroe.
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Step 3: Notes -->
+      <section class="step">
+        <header class="step-head">
+          <span class="step-num">3</span>
+          <h2 class="text-h2">Contexto extra <span class="text-mute">(opcional)</span></h2>
+        </header>
+        <div class="step-body">
+          <textarea
+            formControlName="notes"
+            placeholder="Tenía un AFK desde el min 5 · El Pudge enemigo me cazaba con Blink · No pude rotar a peleas porque..."
+            maxlength="500"
+            rows="4"
+            [class.has-error]="isInvalid('notes')"></textarea>
+          <div class="textarea-foot">
+            <span class="text-mute">
+              Esto le ayuda al coach a contextualizar tu partida.
+            </span>
+            <span class="text-mute">{{ notesLength() }} / 500</span>
+          </div>
+        </div>
+      </section>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg btn-block"
+        [disabled]="isLoading() || form.invalid">
+        Analizar partida
+      </button>
+    </form>
+  }
+</div>

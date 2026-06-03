@@ -1,0 +1,170 @@
+<div class="profile-page">
+  <header class="page-header">
+    <a routerLink="/app/home" class="back-link">← Volver</a>
+    <h1 class="text-display">Mi perfil</h1>
+  </header>
+
+  @if (user(); as u) {
+    <section class="profile-card">
+      <div class="avatar-large">{{ userInitial() }}</div>
+      <div class="profile-info">
+        <h2 class="text-h2">{{ u.email }}</h2>
+        <div class="profile-meta">
+          <span class="tier-pill" [class]="'tier-' + u.tier.toLowerCase()">
+            Plan {{ u.tier }}
+          </span>
+          <span class="text-mute">·</span>
+          <span class="text-subdued">
+            Miembro desde {{ u.createdAt | date:'longDate' }}
+          </span>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <a routerLink="/app/subscription" class="btn btn-ghost">
+          Ver mi plan
+        </a>
+        <button class="btn btn-ghost danger" (click)="logout()">
+          Cerrar sesión
+        </button>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3 class="text-h3">Cuenta de Dota 2</h3>
+      <p class="text-subdued section-desc">
+        Vincula tu cuenta de Steam para ver tus últimas partidas en Home y
+        analizarlas con un solo click.
+      </p>
+
+      @if (linkError(); as e) {
+        <div class="alert alert-error" role="alert">{{ e }}</div>
+      }
+
+      @if (steamLinked()) {
+        <div class="linked-account">
+          <div>
+            <div class="text-mute">Account ID vinculado</div>
+            <div class="steam-id mono">{{ user()?.steamAccountId }}</div>
+          </div>
+          <button class="btn btn-ghost danger" (click)="unlinkSteam()" [disabled]="isLinking()">
+            Desvincular
+          </button>
+        </div>
+      } @else {
+        <div class="field">
+          <label for="steamId">Steam ID o URL del perfil</label>
+          <input
+            id="steamId"
+            type="text"
+            [value]="steamIdInput()"
+            (input)="steamIdInput.set($any($event.target).value)"
+            placeholder="76561198000000000 o steamcommunity.com/profiles/..."
+            autocomplete="off"
+            inputmode="numeric" />
+          <p class="field-hint text-mute">
+            Aceptamos formato 32-bit (account_id) o 64-bit (steamID64). Si pegas
+            la URL completa del perfil, también funciona.
+          </p>
+        </div>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="linkSteam()"
+          [disabled]="isLinking() || !steamIdInput().trim()">
+          @if (isLinking()) { Vinculando… } @else { Vincular cuenta }
+        </button>
+      }
+    </section>
+
+    <section class="settings-section">
+      <h3 class="text-h3">Cambiar contraseña</h3>
+      <p class="text-subdued section-desc">
+        Por seguridad, ingresa tu contraseña actual y elige una nueva.
+      </p>
+
+      @if (error()) {
+        <div class="alert alert-error" role="alert">{{ error() }}</div>
+      }
+
+      <form
+        class="password-form"
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        novalidate>
+        <div class="field">
+          <label for="currentPassword">Contraseña actual</label>
+          <input
+            id="currentPassword"
+            [type]="showPasswords() ? 'text' : 'password'"
+            formControlName="currentPassword"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            [class.has-error]="isInvalid('currentPassword')" />
+          @if (isInvalid('currentPassword')) {
+            <span class="field-error">Ingresa tu contraseña actual.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="newPassword">Nueva contraseña <span class="text-mute">(mín. 8 chars)</span></label>
+          <input
+            id="newPassword"
+            [type]="showPasswords() ? 'text' : 'password'"
+            formControlName="newPassword"
+            autocomplete="new-password"
+            placeholder="••••••••"
+            [class.has-error]="isInvalid('newPassword')" />
+          @if (isInvalid('newPassword')) {
+            <span class="field-error">
+              @if (form.controls.newPassword.errors?.['required']) {
+                Elige una contraseña nueva.
+              } @else if (form.controls.newPassword.errors?.['minlength']) {
+                Debe tener al menos 8 caracteres.
+              }
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirmar nueva contraseña</label>
+          <input
+            id="confirmPassword"
+            [type]="showPasswords() ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            autocomplete="new-password"
+            placeholder="••••••••"
+            [class.has-error]="hasMismatch() || isInvalid('confirmPassword')" />
+          @if (hasMismatch()) {
+            <span class="field-error">Las contraseñas no coinciden.</span>
+          } @else if (isInvalid('confirmPassword')) {
+            <span class="field-error">Confirma la nueva contraseña.</span>
+          }
+        </div>
+
+        <label class="checkbox-field">
+          <input type="checkbox" [checked]="showPasswords()" (change)="togglePasswords()" />
+          <span>Mostrar contraseñas</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+          @if (isLoading()) {
+            Actualizando...
+          } @else {
+            Actualizar contraseña
+          }
+        </button>
+      </form>
+    </section>
+
+    <section class="links-section">
+      <a routerLink="/app/settings" class="link-row">
+        <span>Configuración</span>
+        <span class="text-mute">→</span>
+      </a>
+      <a routerLink="/app/subscription" class="link-row">
+        <span>Mi plan y facturación</span>
+        <span class="text-mute">→</span>
+      </a>
+    </section>
+  }
+</div>

@@ -1,0 +1,94 @@
+@use '../../../theme/colors' as c;
+@use '../../../theme/typography' as t;
+@use '../../../theme/layout' as l;
+@use '../../../theme/animations' as a;
+
+.toast-host {
+  position: fixed;
+  bottom: l.$space-5;
+  right: l.$space-5;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-2;
+  max-width: 420px;
+  pointer-events: none;
+
+  @media (max-width: l.$bp-sm) {
+    bottom: l.$space-3;
+    right: l.$space-3;
+    left: l.$space-3;
+    max-width: none;
+  }
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: l.$space-3;
+  padding: l.$space-3 l.$space-4;
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-md;
+  box-shadow: l.$shadow-lg;
+  pointer-events: auto;
+  animation: slide-in-right a.$dur-base a.$ease-out;
+  font-size: t.$fs-small;
+
+  &.variant-success {
+    border-color: rgba(29, 185, 84, 0.6);
+    .toast-icon { color: c.$accent-primary; }
+  }
+  &.variant-error {
+    border-color: rgba(229, 57, 53, 0.6);
+    .toast-icon { color: c.$danger; }
+  }
+  &.variant-warning {
+    border-color: rgba(242, 169, 0, 0.6);
+    .toast-icon { color: c.$warning; }
+  }
+  &.variant-info {
+    border-color: rgba(79, 163, 255, 0.6);
+    .toast-icon { color: c.$info; }
+  }
+}
+
+.toast-icon {
+  font-size: t.$fs-h3;
+  font-weight: t.$fw-bold;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.toast-message {
+  flex: 1;
+  color: c.$text-base;
+  line-height: t.$lh-normal;
+  word-break: break-word;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: c.$text-mute;
+  font-size: t.$fs-h2;
+  cursor: pointer;
+  padding: 0 l.$space-2;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color a.$dur-fast a.$ease-out;
+
+  &:hover { color: c.$text-base; }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

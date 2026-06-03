@@ -1,22 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="utf-8" />
-  <title>Ionic App</title>
-
+  <title>DotaCoach · Tu coach de Dota 2 con IA</title>
   <base href="/" />
 
-  <meta name="color-scheme" content="light dark" />
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- Identity -->
+  <meta name="description" content="Pega tu ID de partida de Dota 2 y recibe en segundos un análisis detallado del coach IA: errores de items, peleas, posicionamiento y consejos accionables." />
+  <meta name="theme-color" content="#000000" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Viewport -->
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
 
-  <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+  <!-- Favicon (SVG escala perfecto) -->
+  <link rel="icon" type="image/svg+xml" href="assets/icon/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon/apple-touch-icon.png" />
 
-  <!-- add to homescreen for ios -->
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+
+  <!-- Fuente principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" />
+
+  <!-- iOS / Android home screen -->
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="DotaCoach" />
+
+  <!-- Open Graph (compartir en redes) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DotaCoach · Tu coach de Dota 2 con IA" />
+  <meta property="og:description" content="Análisis personalizado de tus partidas en segundos. Pega tu Id de partida y la IA te dice qué mejorar." />
+  <meta property="og:image" content="assets/icon/og-image.png" />
+  <meta property="og:url" content="https://dotacoach.app" />
+  <meta property="og:locale" content="es_AR" />
+
+  <!-- Twitter card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DotaCoach" />
+  <meta name="twitter:description" content="Tu coach de Dota 2 con IA. Análisis de partidas en segundos." />
+  <meta name="twitter:image" content="assets/icon/og-image.png" />
 </head>
 
 <body>

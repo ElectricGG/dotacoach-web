@@ -1,0 +1,293 @@
+@use '../../theme/colors' as c;
+@use '../../theme/typography' as t;
+@use '../../theme/layout' as l;
+@use '../../theme/animations' as a;
+
+.profile-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: l.$space-8 l.$space-5;
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-8;
+}
+
+.page-header {
+  animation: fade-in-up a.$dur-slow a.$ease-out;
+
+  .back-link {
+    display: inline-block;
+    color: c.$text-subdued;
+    text-decoration: none;
+    margin-bottom: l.$space-3;
+    &:hover { color: c.$text-base; }
+  }
+}
+
+// === Profile card ===
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: l.$space-5;
+  background: c.$grad-card-default;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-xl;
+  padding: l.$space-6;
+  flex-wrap: wrap;
+  animation: fade-in-up a.$dur-slow a.$ease-out 50ms backwards;
+}
+
+.avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: c.$accent-primary;
+  color: c.$text-on-accent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: t.$fw-black;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 200px;
+
+  h2 { margin: 0 0 l.$space-2; word-break: break-word; }
+}
+
+.profile-meta {
+  display: flex;
+  align-items: center;
+  gap: l.$space-2;
+  flex-wrap: wrap;
+  font-size: t.$fs-small;
+}
+
+.tier-pill {
+  display: inline-block;
+  padding: 4px l.$space-3;
+  border-radius: l.$radius-pill;
+  font-size: t.$fs-caption;
+  font-weight: t.$fw-bold;
+  letter-spacing: 0.05em;
+
+  &.tier-free {
+    background: c.$bg-tinted;
+    color: c.$text-subdued;
+  }
+  &.tier-pro, &.tier-team {
+    background: rgba(29, 185, 84, 0.18);
+    color: c.$accent-primary;
+  }
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-2;
+  flex-shrink: 0;
+
+  @media (max-width: l.$bp-md) {
+    width: 100%;
+    flex-direction: row;
+    .btn { flex: 1; }
+  }
+}
+
+// === Settings section ===
+.settings-section {
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-xl;
+  padding: l.$space-6;
+  animation: fade-in-up a.$dur-slow a.$ease-out 100ms backwards;
+
+  h3 { margin: 0 0 l.$space-2; }
+}
+
+.section-desc {
+  margin: 0 0 l.$space-5;
+  font-size: t.$fs-small;
+}
+
+// === Form ===
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-4;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-2;
+
+  label {
+    font-size: t.$fs-small;
+    color: c.$text-subdued;
+    font-weight: t.$fw-medium;
+  }
+
+  input {
+    background: c.$bg-base;
+    border: 1px solid c.$bg-press;
+    border-radius: l.$radius-md;
+    padding: l.$space-3 l.$space-4;
+    color: c.$text-base;
+    font-family: inherit;
+    font-size: t.$fs-body;
+    transition: border-color a.$dur-fast a.$ease-out, box-shadow a.$dur-fast a.$ease-out;
+
+    &::placeholder { color: c.$text-mute; }
+    &:focus {
+      outline: none;
+      border-color: c.$accent-primary;
+      box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
+    }
+    &.has-error {
+      border-color: c.$danger;
+      &:focus { box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.2); }
+    }
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+}
+
+.field-error {
+  color: #ff8a85;
+  font-size: t.$fs-small;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: l.$space-2;
+  cursor: pointer;
+  color: c.$text-subdued;
+  font-size: t.$fs-small;
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: c.$accent-primary;
+    cursor: pointer;
+  }
+}
+
+// === Alerts ===
+.alert {
+  padding: l.$space-3 l.$space-4;
+  border-radius: l.$radius-md;
+  font-size: t.$fs-small;
+  margin-bottom: l.$space-4;
+
+  &-success {
+    background: rgba(29, 185, 84, 0.12);
+    border: 1px solid rgba(29, 185, 84, 0.4);
+    color: c.$accent-primary;
+  }
+  &-error {
+    background: rgba(229, 57, 53, 0.12);
+    border: 1px solid rgba(229, 57, 53, 0.4);
+    color: #ff8a85;
+  }
+}
+
+// === Links section ===
+.links-section {
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-xl;
+  overflow: hidden;
+  animation: fade-in-up a.$dur-slow a.$ease-out 150ms backwards;
+}
+
+.link-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: l.$space-4 l.$space-5;
+  text-decoration: none;
+  color: c.$text-base;
+  transition: background a.$dur-fast a.$ease-out;
+  border-bottom: 1px solid c.$bg-tinted;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: c.$bg-tinted; }
+}
+
+// === Buttons ===
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: l.$space-3 l.$space-5;
+  border-radius: l.$radius-pill;
+  font-weight: t.$fw-bold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: t.$fs-small;
+  transition: all a.$dur-fast a.$ease-out;
+
+  &-primary {
+    background: c.$accent-primary;
+    color: c.$text-on-accent;
+    align-self: flex-start;
+    &:hover:not(:disabled) {
+      background: c.$accent-hover;
+      box-shadow: l.$shadow-glow-accent;
+    }
+  }
+
+  &-ghost {
+    background: transparent;
+    color: c.$text-base;
+    border: 1px solid c.$bg-press;
+    &:hover { background: c.$bg-tinted; }
+    &.danger {
+      color: c.$danger;
+      &:hover { background: rgba(229, 57, 53, 0.1); }
+    }
+  }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.linked-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: l.$space-3;
+  background: c.$bg-tinted;
+  border-radius: l.$radius-md;
+  padding: l.$space-3 l.$space-4;
+  flex-wrap: wrap;
+
+  .text-mute {
+    font-size: t.$fs-caption;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .steam-id {
+    font-size: t.$fs-body;
+    font-weight: t.$fw-bold;
+  }
+
+  .mono { font-family: monospace; }
+}
+
+.field-hint {
+  font-size: t.$fs-caption;
+  margin-top: l.$space-1;
+  color: c.$text-mute;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

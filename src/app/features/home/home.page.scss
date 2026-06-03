@@ -1,0 +1,366 @@
+@use '../../theme/colors' as c;
+@use '../../theme/typography' as t;
+@use '../../theme/layout' as l;
+@use '../../theme/animations' as a;
+
+.home-page {
+  max-width: l.$container-max;
+  margin: 0 auto;
+  padding: l.$space-8 l.$space-5;
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-12;
+}
+
+.greeting {
+  animation: fade-in-up a.$dur-slow a.$ease-out;
+
+  .text-mute { display: block; margin-bottom: l.$space-2; }
+}
+
+// === Hero card ===
+.hero-card {
+  position: relative;
+  background: c.$grad-card-default;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-2xl;
+  padding: l.$space-10;
+  overflow: hidden;
+  isolation: isolate;
+  animation: fade-in-up a.$dur-slow a.$ease-out 100ms backwards;
+
+  &-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url('https://cdn.cloudflare.steamstatic.com/steam/apps/570/library_hero.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.18;
+    filter: saturate(1.2);
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: l.$space-3;
+    max-width: 560px;
+  }
+}
+
+// === Recents ===
+.recents {
+  animation: fade-in-up a.$dur-slow a.$ease-out 200ms backwards;
+}
+
+.recents-more {
+  display: inline-block;
+  margin-top: l.$space-4;
+  color: c.$accent-primary;
+  text-decoration: none;
+  font-weight: t.$fw-bold;
+  font-size: t.$fs-small;
+
+  &:hover { color: c.$accent-hover; }
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: l.$space-3;
+  margin-bottom: l.$space-5;
+
+  .text-mute { font-size: t.$fs-body; color: c.$text-mute; }
+}
+
+.recents-grid {
+  display: grid;
+  gap: l.$space-4;
+  grid-template-columns: 1fr;
+
+  @media (min-width: l.$bp-md) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: l.$bp-lg) { grid-template-columns: repeat(3, 1fr); }
+}
+
+.match-card {
+  display: flex;
+  gap: l.$space-4;
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-lg;
+  padding: l.$space-4;
+  text-decoration: none;
+  color: c.$text-base;
+  transition: all a.$dur-fast a.$ease-out;
+
+  &:hover {
+    background: c.$bg-tinted;
+    border-color: c.$accent-primary;
+    transform: translateY(-2px);
+    box-shadow: l.$shadow-md;
+  }
+}
+
+.match-portrait {
+  width: 80px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: l.$radius-sm;
+  flex-shrink: 0;
+}
+
+.match-info {
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-1;
+  min-width: 0;
+  flex: 1;
+}
+
+.match-hero {
+  font-weight: t.$fw-bold;
+  font-size: t.$fs-body;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-meta {
+  display: flex;
+  gap: l.$space-2;
+  font-size: t.$fs-small;
+  color: c.$text-subdued;
+  flex-wrap: wrap;
+}
+
+.match-status {
+  font-size: t.$fs-caption;
+  font-weight: t.$fw-bold;
+  letter-spacing: 0.05em;
+  padding: 2px l.$space-2;
+  border-radius: l.$radius-pill;
+  width: fit-content;
+  margin-top: l.$space-1;
+
+  &.status-active {
+    background: rgba(29, 185, 84, 0.15);
+    color: c.$accent-primary;
+  }
+  &.status-expired, &.status-archived {
+    background: c.$bg-tinted;
+    color: c.$text-mute;
+  }
+}
+
+// === Empty state ===
+.recents-empty {
+  animation: fade-in-up a.$dur-slow a.$ease-out 200ms backwards;
+}
+
+.empty-state {
+  background: c.$bg-elevated;
+  border: 1px dashed c.$bg-press;
+  border-radius: l.$radius-xl;
+  padding: l.$space-10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: l.$space-3;
+
+  .empty-icon { font-size: 3rem; opacity: 0.5; }
+  p { margin: 0; }
+}
+
+// === How it works mini ===
+.how-it-works-mini {
+  animation: fade-in-up a.$dur-slow a.$ease-out 300ms backwards;
+
+  .steps-list {
+    list-style: none;
+    padding: 0;
+    margin: l.$space-5 0 0;
+    display: grid;
+    gap: l.$space-3;
+    grid-template-columns: 1fr;
+
+    @media (min-width: l.$bp-md) { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: l.$space-3;
+    background: c.$bg-elevated;
+    border: 1px solid c.$bg-tinted;
+    border-radius: l.$radius-lg;
+    padding: l.$space-4 l.$space-5;
+    color: c.$text-subdued;
+    font-size: t.$fs-body;
+  }
+}
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: c.$accent-primary;
+  color: c.$text-on-accent;
+  font-weight: t.$fw-bold;
+  flex-shrink: 0;
+}
+
+// === Buttons (re-uso) ===
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: l.$space-2;
+  font-family: inherit;
+  font-weight: t.$fw-bold;
+  border-radius: l.$radius-pill;
+  text-decoration: none;
+  transition: all a.$dur-fast a.$ease-out;
+  border: none;
+  cursor: pointer;
+
+  &-lg { padding: l.$space-4 l.$space-8; font-size: t.$fs-body; }
+
+  &-primary {
+    background: c.$accent-primary;
+    color: c.$text-on-accent;
+    width: fit-content;
+    margin-top: l.$space-3;
+    &:hover {
+      background: c.$accent-hover;
+      transform: translateY(-1px);
+      box-shadow: l.$shadow-glow-accent;
+    }
+  }
+
+  &-ghost {
+    background: transparent;
+    color: c.$text-base;
+    border: 1px solid c.$bg-press;
+    padding: l.$space-3 l.$space-6;
+    &:hover { background: c.$bg-tinted; }
+  }
+
+  &-sm {
+    padding: l.$space-2 l.$space-4;
+    font-size: t.$fs-small;
+    font-weight: t.$fw-medium;
+  }
+}
+
+// === Steam linked: últimas partidas ===
+.steam-matches {
+  animation: fade-in-up a.$dur-slow a.$ease-out 150ms backwards;
+
+  .alert {
+    margin-top: l.$space-3;
+  }
+}
+
+.steam-list {
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-2;
+  margin-top: l.$space-4;
+}
+
+.steam-match {
+  display: flex;
+  align-items: center;
+  gap: l.$space-4;
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-lg;
+  padding: l.$space-3 l.$space-4;
+  cursor: pointer;
+  color: c.$text-base;
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+  transition: all a.$dur-fast a.$ease-out;
+
+  &:hover {
+    background: c.$bg-tinted;
+    border-color: c.$bg-press;
+    transform: translateY(-1px);
+  }
+
+  .steam-portrait {
+    width: 56px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: l.$radius-sm;
+    flex-shrink: 0;
+  }
+
+  .steam-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .steam-hero {
+    font-weight: t.$fw-bold;
+    font-size: t.$fs-body;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .steam-meta {
+    display: flex;
+    gap: l.$space-2;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: t.$fs-small;
+    color: c.$text-subdued;
+
+    .result {
+      font-weight: t.$fw-bold;
+      &.win { color: c.$accent-primary; }
+      &.loss { color: c.$danger; }
+    }
+
+    .kda { font-family: monospace; }
+  }
+
+  .steam-cta {
+    color: c.$accent-primary;
+    font-weight: t.$fw-bold;
+    font-size: t.$fs-small;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: l.$bp-sm) {
+    .steam-cta { display: none; }
+  }
+}
+
+.steam-cta-card {
+  background: c.$bg-elevated;
+  border: 1px dashed c.$bg-press;
+  border-radius: l.$radius-lg;
+  padding: l.$space-6;
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-2;
+  align-items: flex-start;
+  animation: fade-in-up a.$dur-slow a.$ease-out 150ms backwards;
+
+  h3 { margin: 0; }
+  p { margin: 0; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

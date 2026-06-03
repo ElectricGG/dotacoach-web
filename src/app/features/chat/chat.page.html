@@ -1,0 +1,119 @@
+<div class="chat-page">
+  @if (isLoading() && !session()) {
+    <header class="chat-header skeleton-header">
+      <a routerLink="/app/home" class="back-link">←</a>
+      <app-skeleton width="64px" height="36px" radius="6px" />
+      <div class="skeleton-info">
+        <app-skeleton width="180px" height="22px" />
+        <app-skeleton width="140px" height="14px" />
+      </div>
+    </header>
+
+    <div class="chat-messages">
+      <article class="message message-assistant">
+        <div class="skeleton-bubble">
+          <app-skeleton width="90%" height="14px" />
+          <app-skeleton width="80%" height="14px" />
+          <app-skeleton width="60%" height="14px" />
+          <app-skeleton width="70%" height="14px" />
+        </div>
+      </article>
+    </div>
+  } @else if (error() && !session()) {
+    <div class="error-state">
+      <h2 class="text-h2">No se pudo cargar la sesión</h2>
+      <p class="text-subdued">{{ error() }}</p>
+      <a routerLink="/app/home" class="btn btn-primary">Volver al inicio</a>
+    </div>
+  } @else if (session(); as s) {
+    <header class="chat-header">
+      <a routerLink="/app/home" class="back-link">←</a>
+      <img class="hero-portrait" [src]="heroPortraitUrl(s.heroLocalizedName)" [alt]="s.heroLocalizedName" />
+      <div class="header-info">
+        <h2>{{ s.heroLocalizedName }}</h2>
+        <div class="header-meta">
+          <span class="text-subdued">Match {{ s.matchId }}</span>
+          <app-countdown-pill [expiresAt]="s.expiresAt" />
+          <span class="messages-pill">{{ visibleMessages().length }} msg</span>
+        </div>
+      </div>
+    </header>
+
+    @if (error()) {
+      <div class="alert alert-error">{{ error() }}</div>
+    }
+
+    <div class="chat-messages">
+      @for (msg of visibleMessages(); track msg.id) {
+        <article
+          class="message"
+          [class.message-user]="msg.role === 'User'"
+          [class.message-assistant]="msg.role === 'Assistant'">
+          @if (msg.role === 'User') {
+            <div class="message-content">
+              <div class="user-text">{{ msg.content }}</div>
+            </div>
+          } @else {
+            <div class="message-content markdown" [innerHTML]="msg.content | markdown"></div>
+          }
+        </article>
+      }
+
+      @if (isSending()) {
+        <article class="message message-assistant">
+          <div class="message-content typing-content">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="typing-label">El coach está pensando…</span>
+          </div>
+        </article>
+      }
+
+      <div #messagesEnd></div>
+    </div>
+
+    @if (suggestedQuestions().length > 0 && canSendMessage() && !isSending()) {
+      <section class="suggestions">
+        <span class="suggestions-label">Preguntas sugeridas</span>
+        <div class="suggestions-chips">
+          @for (q of suggestedQuestions(); track q) {
+            <button
+              type="button"
+              class="chip"
+              [disabled]="isSending() || !canSendMessage()"
+              (click)="useSuggestion(q)">
+              {{ q }}
+            </button>
+          }
+        </div>
+      </section>
+    }
+
+    <footer class="chat-footer">
+      @if (canSendMessage()) {
+        <div class="message-input-wrapper">
+          <textarea
+            class="message-input"
+            rows="1"
+            placeholder="Pregúntale al coach…"
+            [formControl]="messageControl"
+            (keydown)="onTextareaKeydown($event)"></textarea>
+          <button
+            type="button"
+            class="send-button"
+            [disabled]="messageControl.invalid || isSending() || !canSendMessage()"
+            (click)="send()"
+            aria-label="Enviar mensaje">
+            ▶
+          </button>
+        </div>
+      } @else {
+        <div class="closed-banner">
+          <span>Esta sesión ya no acepta mensajes nuevos.</span>
+          <a routerLink="/app/new" class="btn btn-primary btn-sm">Nueva sesión</a>
+        </div>
+      }
+    </footer>
+  }
+</div>

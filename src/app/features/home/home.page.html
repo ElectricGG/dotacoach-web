@@ -1,0 +1,130 @@
+<div class="home-page">
+  <section class="greeting">
+    <span class="text-mute">Bienvenido,</span>
+    <h1 class="text-display">{{ displayName() }} 👋</h1>
+  </section>
+
+  <section class="hero-card">
+    <div class="hero-card-bg"></div>
+    <div class="hero-card-content">
+      <span class="text-subdued">¿Lista la próxima partida?</span>
+      <h2 class="text-h1">Analiza tu juego con IA</h2>
+      <p class="text-subdued">
+        Pega el ID de partida, elige tu posición y en 6 segundos tienes un análisis
+        detallado del coach.
+      </p>
+      <a routerLink="/app/new" class="btn btn-primary btn-lg">
+        ▶ Comenzar análisis
+      </a>
+    </div>
+  </section>
+
+  @if (hasRecents()) {
+    <section class="recents">
+      <div class="section-head">
+        <h3 class="text-h2">Sesiones recientes</h3>
+        <span class="text-mute">{{ totalSessionCount() }}</span>
+      </div>
+      <div class="recents-grid">
+        @for (entry of recentEntries(); track entry.sessionId) {
+          <a
+            class="match-card"
+            [routerLink]="['/app/sessions', entry.sessionId]">
+            <img
+              class="match-portrait"
+              [src]="heroPortraitUrl(entry.heroLocalizedName)"
+              [alt]="entry.heroLocalizedName"
+              loading="lazy" />
+            <div class="match-info">
+              <div class="match-hero">{{ entry.heroLocalizedName }}</div>
+              <div class="match-meta">
+                <span>{{ positionLabel(entry.playerSlot, entry.laneRole) }}</span>
+                <span>·</span>
+                <span>{{ entry.createdAt | date:'short' }}</span>
+              </div>
+              <div class="match-status" [class]="'status-' + entry.status.toLowerCase()">
+                {{ entry.status }}
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+      @if (hasMoreSessions()) {
+        <a routerLink="/app/sessions" class="recents-more">Ver todas las sesiones →</a>
+      }
+    </section>
+  } @else {
+    <section class="recents-empty">
+      <h3 class="text-h2">Sesiones recientes</h3>
+      <div class="empty-state">
+        <span class="empty-icon">📊</span>
+        <p class="text-subdued">Todavía no tienes análisis. Empieza con tu primera partida.</p>
+        <a routerLink="/app/new" class="btn btn-ghost">Crear análisis</a>
+      </div>
+    </section>
+  }
+
+  @if (hasSteamLinked()) {
+    <section class="steam-matches">
+      <div class="section-head">
+        <h3 class="text-h2">Tus últimas partidas</h3>
+        <button class="btn btn-ghost btn-sm" (click)="refreshSteamMatches()" [disabled]="isLoadingSteam()">
+          @if (isLoadingSteam()) { Cargando… } @else { Actualizar }
+        </button>
+      </div>
+
+      @if (steamError(); as e) {
+        <div class="alert alert-error">{{ e }}</div>
+      } @else if (isLoadingSteam() && steamMatches().length === 0) {
+        <div class="text-subdued">Trayendo tu historial desde OpenDota…</div>
+      } @else if (steamMatches().length === 0) {
+        <div class="text-subdued">
+          No vemos partidas recientes. Es normal si vinculaste recién o no
+          jugaste hace rato.
+        </div>
+      } @else {
+        <div class="steam-list">
+          @for (m of steamMatches(); track m.matchId) {
+            <button class="steam-match" (click)="analyzeMatch(m)" type="button">
+              <img
+                class="steam-portrait"
+                [src]="heroPortraitUrl(m.heroLocalizedName)"
+                [alt]="m.heroLocalizedName"
+                loading="lazy" />
+              <div class="steam-info">
+                <div class="steam-hero">{{ m.heroLocalizedName }}</div>
+                <div class="steam-meta">
+                  <span class="result" [class.win]="m.won" [class.loss]="!m.won">
+                    {{ m.won ? 'Victoria' : 'Derrota' }}
+                  </span>
+                  <span class="kda">{{ m.kills }}/{{ m.deaths }}/{{ m.assists }}</span>
+                  <span>{{ formatDuration(m.durationSeconds) }}</span>
+                  <span class="text-mute">{{ m.startTime | date:'short' }}</span>
+                </div>
+              </div>
+              <span class="steam-cta">Analizar →</span>
+            </button>
+          }
+        </div>
+      }
+    </section>
+  } @else {
+    <section class="steam-cta-card">
+      <h3 class="text-h3">Linkea tu Dota 2 para ver tus partidas acá</h3>
+      <p class="text-subdued">
+        Conecta tu Steam ID y traemos tus últimas partidas automáticamente.
+        Análisis con un solo click.
+      </p>
+      <a routerLink="/app/profile" class="btn btn-ghost">Vincular Steam</a>
+    </section>
+  }
+
+  <section class="how-it-works-mini">
+    <h3 class="text-h2">Cómo funciona</h3>
+    <ol class="steps-list">
+      <li><span class="step-num">1</span> Pega tu ID de partida de Dota 2</li>
+      <li><span class="step-num">2</span> Elige tu posición</li>
+      <li><span class="step-num">3</span> Recibe el análisis del coach</li>
+    </ol>
+  </section>
+</div>

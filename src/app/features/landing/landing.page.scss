@@ -12,6 +12,11 @@ ion-content {
   margin: 0 auto;
   padding-left: l.$space-5;
   padding-right: l.$space-5;
+
+  @media (max-width: 480px) {
+    padding-left: l.$space-4;
+    padding-right: l.$space-4;
+  }
 }
 
 // === Header ===
@@ -40,14 +45,23 @@ ion-content {
   color: c.$text-base;
   font-weight: t.$fw-bold;
   font-size: t.$fs-h3;
+  flex-shrink: 0;
 
   &-mark { color: c.$accent-primary; font-size: 1.5em; }
+
+  @media (max-width: 480px) {
+    .brand-text { display: none; }
+  }
 }
 
 .landing-nav {
   display: flex;
   align-items: center;
   gap: l.$space-4;
+
+  @media (max-width: 480px) {
+    gap: l.$space-3;
+  }
 }
 
 .nav-link {

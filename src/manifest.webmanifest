@@ -1,0 +1,20 @@
+{
+  "name": "DotaCoach",
+  "short_name": "DotaCoach",
+  "description": "Tu coach de Dota 2 con IA. Análisis de partidas en segundos.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "es",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "assets/icon/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

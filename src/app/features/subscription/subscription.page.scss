@@ -1,0 +1,195 @@
+@use '../../theme/colors' as c;
+@use '../../theme/typography' as t;
+@use '../../theme/layout' as l;
+@use '../../theme/animations' as a;
+
+.subscription-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: l.$space-8 l.$space-5;
+  display: flex;
+  flex-direction: column;
+  gap: l.$space-8;
+}
+
+.page-header {
+  animation: fade-in-up a.$dur-slow a.$ease-out;
+
+  .back-link {
+    display: inline-block;
+    color: c.$text-subdued;
+    text-decoration: none;
+    margin-bottom: l.$space-3;
+    &:hover { color: c.$text-base; }
+  }
+
+  h1 { margin: 0 0 l.$space-3; }
+  p { margin: 0; max-width: 640px; }
+}
+
+.alert {
+  padding: l.$space-3 l.$space-4;
+  border-radius: l.$radius-md;
+  font-size: t.$fs-small;
+
+  &-success {
+    background: rgba(29, 185, 84, 0.12);
+    border: 1px solid rgba(29, 185, 84, 0.4);
+    color: c.$accent-primary;
+  }
+}
+
+.plan-cards {
+  display: grid;
+  gap: l.$space-5;
+  grid-template-columns: 1fr;
+
+  @media (min-width: l.$bp-md) { grid-template-columns: repeat(2, 1fr); }
+}
+
+.plan-card {
+  position: relative;
+  background: c.$grad-card-default;
+  padding: l.$space-8;
+  border-radius: l.$radius-xl;
+  border: 1px solid c.$bg-tinted;
+  display: flex;
+  flex-direction: column;
+  animation: fade-in-up a.$dur-slow a.$ease-out backwards;
+
+  &:nth-child(1) { animation-delay: 50ms; }
+  &:nth-child(2) { animation-delay: 100ms; }
+
+  &.current {
+    border-color: c.$accent-primary;
+  }
+
+  &.pro {
+    border-color: c.$accent-primary;
+    box-shadow: l.$shadow-glow-accent;
+  }
+}
+
+.current-badge {
+  position: absolute;
+  top: -12px;
+  left: l.$space-6;
+  padding: 4px l.$space-3;
+  background: c.$accent-primary;
+  color: c.$text-on-accent;
+  border-radius: l.$radius-pill;
+  font-size: t.$fs-caption;
+  font-weight: t.$fw-bold;
+  letter-spacing: 0.05em;
+}
+
+.coming-soon {
+  position: absolute;
+  top: l.$space-6;
+  right: l.$space-6;
+  padding: 4px l.$space-3;
+  background: rgba(242, 169, 0, 0.18);
+  color: c.$warning;
+  border-radius: l.$radius-pill;
+  font-size: t.$fs-caption;
+  font-weight: t.$fw-bold;
+  letter-spacing: 0.05em;
+}
+
+.plan-tag {
+  font-size: t.$fs-small;
+  font-weight: t.$fw-bold;
+  letter-spacing: 0.1em;
+  color: c.$text-subdued;
+  margin-bottom: l.$space-3;
+}
+
+.pro-tag { color: c.$accent-primary; }
+
+.plan-price {
+  font-size: t.$fs-display;
+  font-weight: t.$fw-black;
+  margin: 0 0 l.$space-6;
+
+  span {
+    font-size: t.$fs-body;
+    color: c.$text-subdued;
+    font-weight: t.$fw-regular;
+  }
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 l.$space-8;
+  flex: 1;
+
+  li {
+    padding: l.$space-2 0;
+    color: c.$text-subdued;
+    line-height: t.$lh-relaxed;
+
+    strong { color: c.$text-base; }
+
+    .text-mute { font-size: t.$fs-small; }
+  }
+}
+
+.info-section {
+  background: c.$bg-elevated;
+  border: 1px solid c.$bg-tinted;
+  border-radius: l.$radius-xl;
+  padding: l.$space-6;
+  animation: fade-in-up a.$dur-slow a.$ease-out 200ms backwards;
+
+  h3 { margin: 0 0 l.$space-3; }
+  p { margin: 0 0 l.$space-3; line-height: t.$lh-relaxed; }
+}
+
+.link-accent {
+  color: c.$accent-primary;
+  text-decoration: none;
+  font-weight: t.$fw-medium;
+  &:hover { text-decoration: underline; }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: l.$space-3 l.$space-5;
+  border-radius: l.$radius-pill;
+  font-weight: t.$fw-bold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: t.$fs-small;
+  transition: all a.$dur-fast a.$ease-out;
+
+  &-block { width: 100%; padding: l.$space-4; }
+
+  &-primary {
+    background: c.$accent-primary;
+    color: c.$text-on-accent;
+    &:hover:not(:disabled) {
+      background: c.$accent-hover;
+      transform: translateY(-1px);
+      box-shadow: l.$shadow-glow-accent;
+    }
+  }
+
+  &-ghost {
+    background: transparent;
+    color: c.$text-base;
+    border: 1px solid c.$bg-press;
+    &:hover:not(:disabled) { background: c.$bg-tinted; }
+  }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
