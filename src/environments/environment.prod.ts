@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://dotacoach-api-production.up.railway.app/api',
+  apiUrl: 'https://api.dotamentor.app/api',
 };
