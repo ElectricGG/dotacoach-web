@@ -1,6 +1,6 @@
 {
-  "name": "DotaCoach",
-  "short_name": "DotaCoach",
+  "name": "DotaMentor",
+  "short_name": "DotaMentor",
   "description": "Tu coach de Dota 2 con IA. Análisis de partidas en segundos.",
   "start_url": "/",
   "display": "standalone",
