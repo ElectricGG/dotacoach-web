@@ -1,0 +1,100 @@
+@if (activeSessionId()) {
+  <div class="modal-backdrop" (click)="close()"></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="draft-chat-title">
+    <header class="modal-header">
+      <div class="header-title">
+        <span class="coach-dot" aria-hidden="true"></span>
+        <h2 id="draft-chat-title">
+          @if (session(); as s) {
+            Cómo jugar {{ s.heroLocalizedName }}
+          } @else {
+            Cargando…
+          }
+        </h2>
+      </div>
+      <div class="header-actions">
+        @if (session(); as s) {
+          @if (s.type === 'DraftConsultation') {
+            <div class="outcome-group" role="group" aria-label="Resultado de la partida">
+              <button
+                type="button"
+                class="outcome-btn won"
+                [class.active]="s.outcome === 'Won'"
+                (click)="markOutcome('Won')"
+                title="Marcar como victoria">
+                Gané
+              </button>
+              <button
+                type="button"
+                class="outcome-btn lost"
+                [class.active]="s.outcome === 'Lost'"
+                (click)="markOutcome('Lost')"
+                title="Marcar como derrota">
+                Perdí
+              </button>
+            </div>
+          }
+        }
+        <button class="close-btn" type="button" aria-label="Cerrar" (click)="close()">✕</button>
+      </div>
+    </header>
+
+    @if (error()) {
+      <div class="alert alert-error">{{ error() }}</div>
+    }
+
+    <div class="messages">
+      @for (msg of visibleMessages(); track msg.id) {
+        <article
+          class="message"
+          [class.message-user]="msg.role === 'User'"
+          [class.message-assistant]="msg.role === 'Assistant'">
+          @if (msg.role === 'User') {
+            <div class="message-content user-text">{{ msg.content }}</div>
+          } @else {
+            <div class="message-content markdown" [innerHTML]="msg.content | markdown:itemHints()"></div>
+          }
+        </article>
+      }
+
+      @if (isSending()) {
+        <article class="message message-assistant">
+          <div class="message-content typing">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="typing-label">El coach está pensando…</span>
+          </div>
+        </article>
+      }
+
+      <div #messagesEnd></div>
+    </div>
+
+    <footer class="modal-footer">
+      @if (canSendMessage()) {
+        <div class="input-wrap">
+          <textarea
+            class="msg-input"
+            rows="1"
+            placeholder="Pregúntale al coach…"
+            [formControl]="messageControl"
+            (keydown)="onTextareaKeydown($event)"></textarea>
+          <button
+            class="send-btn"
+            type="button"
+            (click)="sendMessage()"
+            [disabled]="isSending() || messageControl.invalid"
+            aria-label="Enviar">
+            →
+          </button>
+        </div>
+        <div class="footer-meta">
+          <span>{{ session()?.remainingMessages }} preguntas restantes</span>
+        </div>
+      } @else if (session()?.status !== 'Active') {
+        <p class="text-mute">Esta sesión está cerrada. Podés volver a abrir consulta desde Contrapicks.</p>
+      } @else {
+        <p class="text-mute">Llegaste al límite de preguntas. Iniciá otra consulta cuando quieras.</p>
+      }
+    </footer>
+  </div>
+}

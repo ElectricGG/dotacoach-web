@@ -27,14 +27,26 @@
             <div class="card-hero">{{ entry.heroLocalizedName }}</div>
             <div class="card-meta">
               <span>{{ positionLabel(entry.playerSlot, entry.laneRole) }}</span>
-              <span>·</span>
-              <span>Match {{ entry.matchId }}</span>
+              @if (entry.matchId) {
+                <span>·</span>
+                <span>Match {{ entry.matchId }}</span>
+              }
             </div>
             <div class="card-meta">
               <span>{{ entry.createdAt | date:'medium' }}</span>
             </div>
-            <div class="card-status" [class]="'status-' + entry.status.toLowerCase()">
-              {{ entry.status }}
+            <div class="card-badges">
+              <span class="card-status" [class]="'status-' + entry.status.toLowerCase()">
+                {{ entry.status }}
+              </span>
+              @if (entry.type === 'DraftConsultation' && entry.outcome !== 'Unknown') {
+                <span
+                  class="outcome-badge"
+                  [class.outcome-won]="entry.outcome === 'Won'"
+                  [class.outcome-lost]="entry.outcome === 'Lost'">
+                  {{ entry.outcome === 'Won' ? 'Gané' : 'Perdí' }}
+                </span>
+              }
             </div>
           </div>
         </a>

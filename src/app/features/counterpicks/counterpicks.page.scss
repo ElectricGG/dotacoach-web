@@ -49,6 +49,7 @@
 
   .band-enemy { border: 1px solid rgba(229, 57, 53, 0.3); }
   .band-ally { border: 1px solid rgba(29, 185, 84, 0.3); }
+  .band-self { border: 1px solid rgba(79, 163, 255, 0.4); }
 
   .band-label {
     font-size: t.$fs-caption;
@@ -84,6 +85,7 @@
 
   &.enemy { border-color: c.$danger; }
   &.ally { border-color: c.$accent-primary; }
+  &.self { border-color: c.$info; }
   &.empty {
     border-style: dashed;
     border-color: c.$bg-press;
@@ -96,7 +98,7 @@
 // === Main grid ===
 .main-grid {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: minmax(0, 1fr) 460px;
   gap: l.$space-5;
 
   @media (max-width: l.$bp-lg) {
@@ -191,6 +193,7 @@
 
   &.enemy-dot { background: c.$danger; }
   &.ally-dot { background: c.$accent-primary; }
+  &.self-dot { background: c.$info; }
 }
 
 .hero-grid {
@@ -246,6 +249,12 @@
     .hero-tile-name { color: c.$text-base; }
   }
 
+  &.self {
+    border-color: c.$info;
+    background: rgba(79, 163, 255, 0.14);
+    .hero-tile-name { color: c.$text-base; }
+  }
+
   .badge {
     position: absolute;
     top: 4px;
@@ -263,6 +272,7 @@
 
   .enemy-badge { background: c.$danger; }
   .ally-badge { background: c.$accent-primary; color: c.$text-on-accent; }
+  .self-badge { background: c.$info; color: white; }
 }
 
 // === Recommendations panel ===
@@ -477,24 +487,29 @@
 
 .build-tabs {
   display: flex;
-  gap: l.$space-2;
+  gap: 6px;
   padding-bottom: l.$space-2;
   border-bottom: 1px solid c.$bg-tinted;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 }
 
 .build-tab {
-  padding: l.$space-2 l.$space-3;
+  padding: 4px l.$space-2;
   background: transparent;
   border: 1px solid c.$bg-press;
   border-radius: l.$radius-pill;
   color: c.$text-subdued;
   font-family: inherit;
-  font-size: t.$fs-small;
+  font-size: t.$fs-caption;
   font-weight: t.$fw-medium;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: l.$space-2;
+  gap: 4px;
+  white-space: nowrap;
   transition: all a.$dur-fast a.$ease-out;
 
   &:hover { background: c.$bg-tinted; color: c.$text-base; }
@@ -504,6 +519,22 @@
     color: c.$text-on-accent;
     font-weight: t.$fw-bold;
     border-color: c.$accent-primary;
+  }
+
+  &.how-to-play {
+    margin-left: auto;
+    color: c.$accent-primary;
+    border-color: rgba(29, 185, 84, 0.4);
+
+    &:hover {
+      background: rgba(29, 185, 84, 0.10);
+      color: c.$accent-hover;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
   }
 }
 

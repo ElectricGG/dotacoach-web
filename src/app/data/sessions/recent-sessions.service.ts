@@ -1,19 +1,21 @@
 import { Injectable, signal } from '@angular/core';
 
-import { SessionResponseDto } from './session.models';
+import { SessionOutcome, SessionResponseDto } from './session.models';
 
 const STORAGE_KEY = 'dotacoach.recent_sessions';
 const MAX_RECENT = 20;
 
 export interface RecentSessionEntry {
   sessionId: string;
-  matchId: number;
+  type: 'MatchAnalysis' | 'DraftConsultation' | string;
+  matchId: number | null;
   heroLocalizedName: string;
-  playerSlot: number;
+  playerSlot: number | null;
   laneRole: number | null;
   createdAt: string;
   expiresAt: string;
   status: string;
+  outcome: SessionOutcome;
 }
 
 /** Cache local de sesiones recientes (signal + localStorage). Estado puro:
@@ -26,6 +28,7 @@ export class RecentSessionsService {
   add(session: SessionResponseDto): void {
     const entry: RecentSessionEntry = {
       sessionId: session.sessionId,
+      type: session.type,
       matchId: session.matchId,
       heroLocalizedName: session.heroLocalizedName,
       playerSlot: session.playerSlot,
@@ -33,6 +36,7 @@ export class RecentSessionsService {
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
       status: session.status,
+      outcome: session.outcome ?? 'Unknown',
     };
 
     const current = this.entries();

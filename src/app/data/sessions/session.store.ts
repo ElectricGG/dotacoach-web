@@ -5,7 +5,9 @@ import { firstValueFrom } from 'rxjs';
 import { RecentSessionsService } from './recent-sessions.service';
 import { SessionApi } from './session.api';
 import {
+  CreateDraftConsultationRequest,
   CreateSessionRequest,
+  SessionOutcome,
   SessionResponseDto,
 } from './session.models';
 
@@ -52,6 +54,22 @@ export class SessionStore {
     }
   }
 
+  async createDraftConsultation(request: CreateDraftConsultationRequest): Promise<SessionResponseDto> {
+    this.beginRequest('analyzing');
+    try {
+      const session = await firstValueFrom(this.api.createDraftConsultation(request));
+      this.current.set(session);
+      this.recents.add(session);
+      return session;
+    } catch (e) {
+      this.handleError(e);
+      throw e;
+    } finally {
+      this.isLoading.set(false);
+      this.loadingPhase.set('idle');
+    }
+  }
+
   async loadSession(id: string): Promise<void> {
     this.beginRequest('fetching');
     try {
@@ -82,6 +100,17 @@ export class SessionStore {
     } finally {
       this.isLoading.set(false);
       this.loadingPhase.set('idle');
+    }
+  }
+
+  async setOutcome(id: string, outcome: SessionOutcome): Promise<void> {
+    try {
+      const session = await firstValueFrom(this.api.setOutcome(id, outcome));
+      this.current.set(session);
+      this.recents.add(session);
+    } catch (e) {
+      this.handleError(e);
+      throw e;
     }
   }
 

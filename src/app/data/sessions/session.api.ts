@@ -4,8 +4,10 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import {
+  CreateDraftConsultationRequest,
   CreateSessionRequest,
   SendMessageRequest,
+  SessionOutcome,
   SessionResponseDto,
   SessionSummaryDto,
 } from './session.models';
@@ -36,7 +38,15 @@ export class SessionApi {
     return this.http.get<SessionSummaryDto[]>(`${this.base}?take=${take}`);
   }
 
+  createDraftConsultation(body: CreateDraftConsultationRequest): Observable<SessionResponseDto> {
+    return this.http.post<SessionResponseDto>(`${this.base}/draft-consultation`, body);
+  }
+
   sendMessage(id: string, body: SendMessageRequest): Observable<SessionResponseDto> {
     return this.http.post<SessionResponseDto>(`${this.base}/${id}/messages`, body);
+  }
+
+  setOutcome(id: string, outcome: SessionOutcome): Observable<SessionResponseDto> {
+    return this.http.post<SessionResponseDto>(`${this.base}/${id}/outcome`, { outcome });
   }
 }

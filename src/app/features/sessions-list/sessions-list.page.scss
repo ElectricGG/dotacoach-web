@@ -89,6 +89,13 @@
   flex-wrap: wrap;
 }
 
+.card-badges {
+  display: flex;
+  gap: l.$space-2;
+  flex-wrap: wrap;
+  margin-top: l.$space-1;
+}
+
 .card-status {
   font-size: t.$fs-caption;
   font-weight: t.$fw-bold;
@@ -96,7 +103,6 @@
   padding: 2px l.$space-2;
   border-radius: l.$radius-pill;
   width: fit-content;
-  margin-top: l.$space-1;
 
   &.status-active {
     background: rgba(29, 185, 84, 0.15);
@@ -105,6 +111,24 @@
   &.status-expired, &.status-archived {
     background: c.$bg-tinted;
     color: c.$text-mute;
+  }
+}
+
+.outcome-badge {
+  font-size: t.$fs-caption;
+  font-weight: t.$fw-bold;
+  letter-spacing: 0.05em;
+  padding: 2px l.$space-2;
+  border-radius: l.$radius-pill;
+  width: fit-content;
+
+  &.outcome-won {
+    background: rgba(29, 185, 84, 0.15);
+    color: c.$accent-primary;
+  }
+  &.outcome-lost {
+    background: rgba(229, 57, 53, 0.18);
+    color: #ff8a85;
   }
 }
 

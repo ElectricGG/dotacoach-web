@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
+  ViewEncapsulation,
   computed,
   inject,
   signal,
@@ -29,6 +30,10 @@ import { extractSuggestedQuestions } from '../../shared/utils/extract-suggested-
   ],
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
+  // Sin encapsulación: necesitamos que los estilos lleguen a los chips de items
+  // inyectados por innerHTML (el atributo de scope de Angular no se aplica a
+  // contenido dinámico).
+  encapsulation: ViewEncapsulation.None,
 })
 export class ChatPage implements OnInit, AfterViewChecked {
   private readonly route = inject(ActivatedRoute);
@@ -46,6 +51,16 @@ export class ChatPage implements OnInit, AfterViewChecked {
   readonly messageControl = new FormControl<string>('', {
     nonNullable: true,
     validators: [Validators.required, Validators.maxLength(500)],
+  });
+
+  /** Hints de items para que el markdown pipe los reemplace con chips inline.
+   *  Solo aplica si la sesión es DraftConsultation (trae relevantItems). */
+  readonly itemHints = computed(() => {
+    const items = this.session()?.relevantItems ?? [];
+    return items.map((i) => ({
+      displayName: i.displayName,
+      imgUrl: `https://cdn.cloudflare.steamstatic.com${i.imgPath}`,
+    }));
   });
 
   readonly visibleMessages = computed(() => {
@@ -114,6 +129,17 @@ export class ChatPage implements OnInit, AfterViewChecked {
 
   useSuggestion(question: string): void {
     this.send(question);
+  }
+
+  async markOutcome(outcome: 'Won' | 'Lost'): Promise<void> {
+    const s = this.session();
+    if (!s || s.type !== 'DraftConsultation') return;
+    const next = s.outcome === outcome ? 'Unknown' : outcome;
+    try {
+      await this.sessions.setOutcome(s.sessionId, next);
+    } catch {
+      // error queda en this.error
+    }
   }
 
   onTextareaKeydown(event: KeyboardEvent): void {

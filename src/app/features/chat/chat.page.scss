@@ -89,6 +89,39 @@
   letter-spacing: 0.05em;
 }
 
+.outcome-group {
+  display: inline-flex;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.outcome-btn {
+  background: transparent;
+  border: 1px solid c.$bg-press;
+  color: c.$text-subdued;
+  font-size: t.$fs-caption;
+  font-weight: t.$fw-bold;
+  padding: 6px 12px;
+  border-radius: l.$radius-sm;
+  cursor: pointer;
+  transition: all a.$dur-fast a.$ease-out;
+  line-height: 1;
+
+  &:hover { background: c.$bg-tinted; color: c.$text-base; }
+
+  &.won.active {
+    background: rgba(29, 185, 84, 0.18);
+    border-color: c.$accent-primary;
+    color: c.$accent-primary;
+  }
+  &.lost.active {
+    background: rgba(229, 57, 53, 0.18);
+    border-color: #e53935;
+    color: #ff8a85;
+  }
+}
+
 // === Messages ===
 .chat-messages {
   display: flex;
@@ -173,6 +206,30 @@
       margin: l.$space-3 0;
       color: c.$text-subdued;
       font-style: italic;
+    }
+
+    // Chip inline para items mencionados por el coach (draft consultation).
+    .inline-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 0 4px 0 2px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(242, 169, 0, 0.3);
+      border-radius: l.$radius-sm;
+      vertical-align: -1px;
+      white-space: nowrap;
+      font-weight: t.$fw-bold;
+      color: c.$warning;
+      font-size: 0.85em;
+
+      img {
+        width: 12px;
+        height: 9px;
+        object-fit: cover;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
     }
   }
 }

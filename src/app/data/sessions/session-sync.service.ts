@@ -28,6 +28,7 @@ export class SessionSyncService {
 function toEntry(s: SessionSummaryDto): RecentSessionEntry {
   return {
     sessionId: s.sessionId,
+    type: s.type,
     matchId: s.matchId,
     heroLocalizedName: s.heroLocalizedName,
     playerSlot: s.playerSlot,
@@ -35,5 +36,6 @@ function toEntry(s: SessionSummaryDto): RecentSessionEntry {
     createdAt: s.createdAt,
     expiresAt: s.expiresAt,
     status: s.status,
+    outcome: s.outcome ?? 'Unknown',
   };
 }

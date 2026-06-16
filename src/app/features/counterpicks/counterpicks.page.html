@@ -1,10 +1,10 @@
 <div class="counterpicks-page">
   <header class="page-header">
     <a routerLink="/app/home" class="back-link">← Volver</a>
-    <h1 class="text-display">Contrapicks</h1>
+    <h1 class="text-display">Asistente de juego</h1>
     <p class="text-subdued">
-      Elegí el lado (enemigos o aliados) y tocá héroes en la grilla para marcarlos.
-      Las recomendaciones se actualizan en vivo basadas en winrate real de OpenDota.
+      Asistente pre-partida: marcá enemigos y aliados, recibí contrapicks por winrate,
+      consultá builds (popular y con IA) y chateá con el coach sobre cómo jugar el matchup.
     </p>
   </header>
 
@@ -35,7 +35,19 @@
         }
       </div>
     </div>
-    @if (enemies().length + allies().length > 0) {
+    <div class="band band-self">
+      <span class="band-label">Mi héroe</span>
+      <div class="band-list">
+        @if (myHero(); as h) {
+          <button class="picked-mini self" type="button" (click)="removePick(h)" [title]="'Quitar ' + h.localizedName">
+            <img [src]="heroPortraitUrl(h.internalName)" [alt]="h.localizedName" loading="lazy" />
+          </button>
+        } @else {
+          <span class="picked-mini empty">?</span>
+        }
+      </div>
+    </div>
+    @if (enemies().length + allies().length > 0 || myHero()) {
       <button class="btn btn-ghost btn-sm clear-btn" (click)="clearAll()">Limpiar</button>
     }
   </section>
@@ -70,6 +82,14 @@
           <span class="side-dot ally-dot"></span>
           Aliados
         </button>
+        <button
+          type="button"
+          class="side-btn"
+          [class.active]="currentSide() === 'self'"
+          (click)="setSide('self')">
+          <span class="side-dot self-dot"></span>
+          Mi héroe
+        </button>
       </div>
 
       @if (heroesError(); as e) {
@@ -84,6 +104,7 @@
               class="hero-tile"
               [class.enemy]="pickOf(h.id) === 'enemy'"
               [class.ally]="pickOf(h.id) === 'ally'"
+              [class.self]="pickOf(h.id) === 'self'"
               [title]="h.localizedName"
               (click)="togglePick(h)">
               <img [src]="heroPortraitUrl(h.internalName)" [alt]="h.localizedName" loading="lazy" />
@@ -92,6 +113,8 @@
                 <span class="badge enemy-badge">E</span>
               } @else if (pickOf(h.id) === 'ally') {
                 <span class="badge ally-badge">A</span>
+              } @else if (pickOf(h.id) === 'self') {
+                <span class="badge self-badge">★</span>
               }
             </button>
           }
@@ -101,9 +124,13 @@
 
     <aside class="recs">
       <h3 class="text-h3">
-        Recomendaciones
-        @if (loadingRecs()) {
-          <span class="spinner" aria-label="Cargando"></span>
+        @if (myHero()) {
+          Tu héroe
+        } @else {
+          Recomendaciones
+          @if (loadingRecs()) {
+            <span class="spinner" aria-label="Cargando"></span>
+          }
         }
       </h3>
 
@@ -120,7 +147,7 @@
         }
       </div>
 
-      @if (allies().length > 0) {
+      @if (!myHero() && allies().length > 0) {
         <div class="ally-info">
           @if (targetRole()) {
             Excluyendo {{ allies().length }} aliado{{ allies().length === 1 ? '' : 's' }} de las recomendaciones.
@@ -130,9 +157,105 @@
         </div>
       }
 
-      @if (!canRequest()) {
+      @if (myHero(); as mine) {
+        <!-- Modo "Mi héroe": una sola card con los tabs (Popular / IA / Cómo jugar). -->
+        <ol class="rec-list">
+          <li class="rec-item">
+            <div class="rec-row">
+              <img class="rec-portrait" [src]="heroPortraitUrl(mine.internalName)" [alt]="mine.localizedName" loading="lazy" />
+              <div class="rec-info">
+                <div class="rec-name">{{ mine.localizedName }}</div>
+                <div class="rec-stats">
+                  <span class="text-mute">Elegido manualmente</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="build-toggle"
+                [class.expanded]="expandedHeroId() === mine.id"
+                (click)="toggleBuild(mine.id)">
+                @if (expandedHeroId() === mine.id) { Ocultar } @else { Build }
+              </button>
+            </div>
+
+            @if (expandedHeroId() === mine.id) {
+              <div class="build-panel">
+                <div class="build-tabs" role="tablist">
+                  <button type="button" class="build-tab" [class.active]="buildMode() === 'popular'" (click)="setBuildMode(mine.id, 'popular')">Build más usada</button>
+                  <button type="button" class="build-tab" [class.active]="buildMode() === 'ai'" (click)="setBuildMode(mine.id, 'ai')" [title]="enemies().length === 0 ? 'Sin enemigos seleccionados, la IA dará build estándar' : ''">
+                    Build con IA
+                    @if (enemies().length > 0) { <span class="badge-enemy-count">{{ enemies().length }}</span> }
+                  </button>
+                  <button type="button" class="build-tab how-to-play" (click)="openHowToPlay(mine.id)" [disabled]="creatingConsultationFor() === mine.id" title="Abre un chat con el coach para profundizar el matchup">
+                    @if (creatingConsultationFor() === mine.id) { Abriendo chat… } @else { Cómo jugar → }
+                  </button>
+                </div>
+
+                @if (consultationError()) {
+                  <div class="alert alert-error">{{ consultationError() }}</div>
+                }
+
+                @if (loadingBuildFor() === mine.id) {
+                  <div class="text-mute">
+                    @if (buildMode() === 'ai') { Generando build con IA… (3-5s) } @else { Cargando build… }
+                  </div>
+                } @else if (buildError(); as e) {
+                  <div class="alert alert-error">{{ e }}</div>
+                } @else if (buildMode() === 'popular') {
+                  @if (popularBuildFor(mine.id); as build) {
+                    @for (phase of build.phases; track phase.phaseKey) {
+                      @if (phase.items.length > 0) {
+                        <div class="build-phase">
+                          <h4 class="build-phase-label">{{ phase.phaseLabel }}</h4>
+                          <div class="build-items">
+                            @for (item of phase.items; track item.itemId) {
+                              <div class="build-item" [title]="item.displayName + ' · ' + item.cost + ' oro'">
+                                <img class="build-item-img" [src]="itemImgUrl(item.imgPath)" [alt]="item.displayName" loading="lazy" />
+                                <span class="build-item-name">{{ item.displayName }}</span>
+                                @if (item.cost > 0) { <span class="build-item-cost">{{ formatCost(item.cost) }}</span> }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    }
+                  }
+                } @else {
+                  @if (aiBuildFor(mine.id); as build) {
+                    @if (build.strategySummary) {
+                      <div class="ai-summary"><span class="coach-dot" aria-hidden="true"></span>{{ build.strategySummary }}</div>
+                    }
+                    @if (build.phases.length === 0) {
+                      <p class="text-mute">La IA no pudo generar build válida. Probá con menos enemigos o "Build más usada".</p>
+                    }
+                    @for (phase of build.phases; track phase.phaseKey) {
+                      <div class="build-phase">
+                        <h4 class="build-phase-label">{{ phase.phaseLabel }}</h4>
+                        <ul class="ai-items">
+                          @for (item of phase.items; track item.itemId) {
+                            <li class="ai-item">
+                              <img class="build-item-img" [src]="itemImgUrl(item.imgPath)" [alt]="item.displayName" loading="lazy" />
+                              <div class="ai-item-text">
+                                <div class="ai-item-head">
+                                  <span class="ai-item-name">{{ item.displayName }}</span>
+                                  @if (item.cost > 0) { <span class="ai-item-cost">{{ formatCost(item.cost) }}</span> }
+                                </div>
+                                @if (item.reason) { <p class="ai-item-reason">{{ item.reason }}</p> }
+                              </div>
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    }
+                  }
+                }
+              </div>
+            }
+          </li>
+        </ol>
+      } @else if (!canRequest()) {
         <p class="text-subdued">
-          Marca al menos un héroe enemigo para ver counters.
+          Marca al menos un héroe enemigo para ver counters, o elegí "Mi héroe" si ya sabés qué vas a jugar.
         </p>
       } @else if (recsError(); as e) {
         <div class="alert alert-error">{{ e }}</div>
@@ -194,7 +317,23 @@
                         <span class="badge-enemy-count">{{ enemies().length }}</span>
                       }
                     </button>
+                    <button
+                      type="button"
+                      class="build-tab how-to-play"
+                      (click)="openHowToPlay(r.heroId)"
+                      [disabled]="creatingConsultationFor() === r.heroId"
+                      title="Abre un chat con el coach para profundizar el matchup">
+                      @if (creatingConsultationFor() === r.heroId) {
+                        Abriendo chat…
+                      } @else {
+                        Cómo jugar →
+                      }
+                    </button>
                   </div>
+
+                  @if (consultationError() && expandedHeroId() === r.heroId) {
+                    <div class="alert alert-error">{{ consultationError() }}</div>
+                  }
 
                   @if (loadingBuildFor() === r.heroId) {
                     <div class="text-mute">

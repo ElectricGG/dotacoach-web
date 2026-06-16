@@ -3,13 +3,13 @@
     <a routerLink="/app/profile" class="back-link">← Mi perfil</a>
     <h1 class="text-display">Mi plan</h1>
     <p class="text-subdued">
-      Aquí vas a poder gestionar tu suscripción cuando habilitemos los pagos.
+      Gestiona tu suscripción. Los pagos se procesan con Mercado Pago.
     </p>
   </header>
 
-  @if (notified()) {
+  @if (status()?.isActive && status()?.expiresAt; as expiresAt) {
     <div class="alert alert-success" role="alert">
-      ✓ Listo, te avisamos al email cuando Pro esté disponible.
+      ✓ Plan {{ status()?.tier }} activo — próxima renovación: {{ expiresAt | date: 'longDate' }}
     </div>
   }
 
@@ -37,21 +37,40 @@
       }
     </article>
 
-    <article class="plan-card pro">
+    <article class="plan-card pro" [class.current]="user()?.tier === 'Pro'">
+      @if (user()?.tier === 'Pro') {
+        <span class="current-badge">Plan actual</span>
+      }
       <span class="plan-tag pro-tag">PRO</span>
-      <span class="coming-soon">Muy pronto</span>
-      <p class="plan-price">$3<span> / mes</span></p>
+      <p class="plan-price">S/ 14.90<span> / mes</span></p>
       <ul class="plan-features">
         <li>✓ <strong>Análisis ilimitados</strong></li>
         <li>✓ Mensajes ilimitados por análisis</li>
         <li>✓ Histórico completo de sesiones</li>
-        <li>✓ Chat de seguimiento extendido (7 días)</li>
-        <li>✓ Modelo Gemini Pro (más inteligente)</li>
+        <li>✓ Consultas de draft / counterpicks ilimitadas</li>
         <li>✓ Soporte prioritario</li>
       </ul>
-      <button class="btn btn-primary btn-block" (click)="notifyMe()">
-        Avísame cuando esté disponible
-      </button>
+      @if (user()?.tier === 'Pro') {
+        @if (status()?.canCancel) {
+          <button
+            class="btn btn-ghost btn-block"
+            [disabled]="cancelLoading()"
+            (click)="cancel()"
+          >
+            {{ cancelLoading() ? 'Cancelando…' : 'Cancelar suscripción' }}
+          </button>
+        } @else {
+          <button class="btn btn-ghost btn-block" disabled>Tu plan actual</button>
+        }
+      } @else {
+        <button
+          class="btn btn-primary btn-block"
+          [disabled]="checkoutLoading() === 'Pro'"
+          (click)="startCheckout('Pro')"
+        >
+          {{ checkoutLoading() === 'Pro' ? 'Redirigiendo…' : 'Suscribirme a Pro' }}
+        </button>
+      }
     </article>
   </div>
 

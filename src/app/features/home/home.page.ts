@@ -60,7 +60,8 @@ export class HomePage implements OnInit {
     });
   }
 
-  positionLabel(slot: number, laneRole: number | null): string {
+  positionLabel(slot: number | null, laneRole: number | null): string {
+    if (slot === null) return 'Consulta de draft';
     const team = (slot & 0b1000_0000) === 0 ? 'Radiant' : 'Dire';
     const role = laneRoleLabel(laneRole);
     return role ? `${team} · ${role}` : team;

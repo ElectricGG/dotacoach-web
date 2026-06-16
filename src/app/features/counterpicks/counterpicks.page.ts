@@ -2,6 +2,9 @@ import { Component, OnInit, computed, effect, inject, signal } from '@angular/co
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
+import { DraftChatModalService } from '../../core/services/draft-chat-modal.service';
+import { SessionStore } from '../../data/sessions/session.store';
+
 import { DraftApi } from '../../data/draft/draft.api';
 import {
   AiBuildResponse,
@@ -11,7 +14,8 @@ import {
   TargetRole,
 } from '../../data/draft/draft.models';
 
-type Pick = 'none' | 'enemy' | 'ally';
+type Pick = 'none' | 'enemy' | 'ally' | 'self';
+export type ActiveSide = 'enemy' | 'ally' | 'self';
 export type BuildMode = 'popular' | 'ai';
 
 @Component({
@@ -23,6 +27,63 @@ export type BuildMode = 'popular' | 'ai';
 })
 export class CounterpicksPage implements OnInit {
   private readonly api = inject(DraftApi);
+  private readonly sessionStore = inject(SessionStore);
+  private readonly draftChatModal = inject(DraftChatModalService);
+
+  readonly creatingConsultationFor = signal<number | null>(null);
+  readonly consultationError = signal<string | null>(null);
+
+  /** Cache en memoria de consultas creadas: (heroId + lineup enemigo) → sessionId.
+   *  Permite reabrir la conversación sin pegarle a Gemini de nuevo. Si los enemigos
+   *  cambian, la key cambia y se crea una nueva sesión. */
+  private readonly consultationCache = new Map<string, string>();
+
+  private consultationCacheKey(heroId: number): string {
+    const enemyIds = this.enemies()
+      .map((h) => h.id)
+      .sort((a, b) => a - b);
+    const role = this.targetRole() ?? 'any';
+    return `${heroId}:${role}:${enemyIds.join(',')}`;
+  }
+
+  async openHowToPlay(heroId: number): Promise<void> {
+    if (this.enemies().length === 0) {
+      this.consultationError.set('Marcá al menos un enemigo para que el coach te asesore.');
+      return;
+    }
+    this.consultationError.set(null);
+
+    const key = this.consultationCacheKey(heroId);
+    const cachedSessionId = this.consultationCache.get(key);
+
+    if (cachedSessionId) {
+      // Sesión ya creada para esta combinación — reabrimos sin llamar Gemini.
+      try {
+        await this.sessionStore.loadSession(cachedSessionId);
+        this.draftChatModal.open(cachedSessionId);
+        return;
+      } catch {
+        // Si el backend devolvió 404 (ej: sesión expirada y limpiada), fallback a crear.
+        this.consultationCache.delete(key);
+      }
+    }
+
+    this.creatingConsultationFor.set(heroId);
+    try {
+      const session = await this.sessionStore.createDraftConsultation({
+        heroId,
+        enemyHeroIds: this.enemies().map((h) => h.id),
+        targetRole: this.targetRole(),
+      });
+      this.consultationCache.set(key, session.sessionId);
+      this.draftChatModal.open(session.sessionId);
+    } catch (e) {
+      console.warn('[Counterpicks] draft consultation failed', e);
+      this.consultationError.set('No se pudo abrir el chat con el coach. Probá de nuevo.');
+    } finally {
+      this.creatingConsultationFor.set(null);
+    }
+  }
 
   readonly heroes = signal<HeroDto[]>([]);
   readonly loadingHeroes = signal(false);
@@ -38,9 +99,9 @@ export class CounterpicksPage implements OnInit {
   readonly query = signal('');
   readonly targetRole = signal<TargetRole | null>(null);
   /** Lado que se marca al tocar un héroe en la grilla. Toggle global. */
-  readonly currentSide = signal<'enemy' | 'ally'>('enemy');
+  readonly currentSide = signal<ActiveSide>('enemy');
 
-  setSide(side: 'enemy' | 'ally'): void {
+  setSide(side: ActiveSide): void {
     this.currentSide.set(side);
   }
 
@@ -150,6 +211,8 @@ export class CounterpicksPage implements OnInit {
 
   readonly enemies = computed(() => this.filterByPick('enemy'));
   readonly allies = computed(() => this.filterByPick('ally'));
+  /** Héroe que el usuario decidió jugar (manual). Reemplaza al listado de recomendaciones. */
+  readonly myHero = computed<HeroDto | null>(() => this.filterByPick('self')[0] ?? null);
 
   readonly filteredHeroes = computed(() => {
     const q = this.query().trim().toLowerCase();
@@ -192,10 +255,21 @@ export class CounterpicksPage implements OnInit {
     if (current === side) {
       map.delete(hero.id);
     } else {
+      // 'self' tiene cap de 1 (un solo héroe propio); enemy/ally tienen cap de 5.
+      const cap = side === 'self' ? 1 : 5;
       const sameSideCount = [...map.values()].filter((p) => p === side).length;
-      // Si el hero ya estaba en el otro lado, el cap no se rompe (cambia de bando, no agrega).
-      if (current !== side && sameSideCount >= 5 && current === 'none') {
-        return;
+      if (current !== side && sameSideCount >= cap && current === 'none') {
+        // Si es 'self' y ya hay uno, reemplazamos el anterior (UX más natural que ignorar el click).
+        if (side === 'self') {
+          for (const [id, p] of map) {
+            if (p === 'self') {
+              map.delete(id);
+              break;
+            }
+          }
+        } else {
+          return;
+        }
       }
       map.set(hero.id, side);
     }

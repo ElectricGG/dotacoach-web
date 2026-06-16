@@ -32,11 +32,36 @@
       <div class="header-info">
         <h2>{{ s.heroLocalizedName }}</h2>
         <div class="header-meta">
-          <span class="text-subdued">Match {{ s.matchId }}</span>
+          @if (s.matchId) {
+            <span class="text-subdued">Match {{ s.matchId }}</span>
+          } @else {
+            <span class="text-subdued">Consulta de draft</span>
+          }
           <app-countdown-pill [expiresAt]="s.expiresAt" />
           <span class="messages-pill">{{ visibleMessages().length }} msg</span>
         </div>
       </div>
+
+      @if (s.type === 'DraftConsultation') {
+        <div class="outcome-group" role="group" aria-label="Resultado de la partida">
+          <button
+            type="button"
+            class="outcome-btn won"
+            [class.active]="s.outcome === 'Won'"
+            (click)="markOutcome('Won')"
+            title="Marcar como victoria">
+            Gané
+          </button>
+          <button
+            type="button"
+            class="outcome-btn lost"
+            [class.active]="s.outcome === 'Lost'"
+            (click)="markOutcome('Lost')"
+            title="Marcar como derrota">
+            Perdí
+          </button>
+        </div>
+      }
     </header>
 
     @if (error()) {
@@ -54,7 +79,7 @@
               <div class="user-text">{{ msg.content }}</div>
             </div>
           } @else {
-            <div class="message-content markdown" [innerHTML]="msg.content | markdown"></div>
+            <div class="message-content markdown" [innerHTML]="msg.content | markdown:itemHints()"></div>
           }
         </article>
       }
