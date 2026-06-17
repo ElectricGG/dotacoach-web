@@ -36,6 +36,12 @@ export const routes: Routes = [
       import('./features/auth/verify-email.page').then((m) => m.VerifyEmailPage),
   },
 
+  {
+    path: 'terminos',
+    loadComponent: () =>
+      import('./features/legal/terms.page').then((m) => m.TermsPage),
+  },
+
   // App protegida
   {
     path: 'app',
