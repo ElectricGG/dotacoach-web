@@ -86,8 +86,9 @@
       <label class="checkbox-field">
         <input type="checkbox" formControlName="acceptTerms" [disabled]="isLoading()" />
         <span>
-          Acepto los <a href="#" class="link-accent">términos</a> y la
-          <a href="#" class="link-accent">política de privacidad</a>.
+          Acepto los
+          <a routerLink="/terminos" target="_blank" class="link-accent">términos</a> y la
+          <a routerLink="/privacidad" target="_blank" class="link-accent">política de privacidad</a>.
         </span>
       </label>
       @if (isInvalid('acceptTerms')) {
