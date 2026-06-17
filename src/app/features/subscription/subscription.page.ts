@@ -35,14 +35,14 @@ export class SubscriptionPage implements OnInit {
     this.refreshStatus();
   }
 
-  /** Inicia el checkout de Lemon Squeezy y redirige a su URL. */
+  /** Inicia el checkout de Mercado Pago y redirige al init_point. */
   startCheckout(tier: SubscriptionTier): void {
     if (this.checkoutLoading()) return;
     this.checkoutLoading.set(tier);
     this.billing.createCheckout({ tier }).subscribe({
-      next: ({ url }) => {
-        // Salimos de la SPA hacia el checkout de Lemon Squeezy.
-        window.location.href = url;
+      next: ({ initPoint }) => {
+        // Salimos de la SPA hacia el checkout de Mercado Pago.
+        window.location.href = initPoint;
       },
       error: () => {
         this.checkoutLoading.set(null);
