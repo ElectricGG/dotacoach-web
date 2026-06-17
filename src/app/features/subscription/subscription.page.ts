@@ -75,14 +75,28 @@ export class SubscriptionPage implements OnInit {
     });
   }
 
-  /** Lee ?status=success|pending|failure que Mercado Pago agrega al volver. */
+  /**
+   * Al volver de Mercado Pago, la URL trae ?preapproval_id=... Lo mandamos al
+   * backend para confirmar y activar el tier del usuario autenticado.
+   */
   private handleReturnStatus(): void {
-    const status = this.route.snapshot.queryParamMap.get('status');
-    if (status === 'success') {
-      this.toast.success('¡Pago recibido! Tu plan se activa en unos segundos.');
-    } else if (status === 'pending') {
-      this.toast.info('Tu pago quedó pendiente. Te avisamos cuando se confirme.');
-    } else if (status === 'failure') {
+    const preapprovalId = this.route.snapshot.queryParamMap.get('preapproval_id');
+    if (preapprovalId) {
+      this.billing.confirm(preapprovalId).subscribe({
+        next: (status) => {
+          this.status.set(status);
+          if (status.isActive) {
+            this.toast.success('¡Listo! Tu plan Mentor Pro está activo. 🎉');
+          } else {
+            this.toast.info('Pago recibido. Tu plan se activará en unos segundos.');
+          }
+        },
+        error: () => this.toast.error('No pudimos confirmar tu suscripción. Si pagaste, escríbenos.'),
+      });
+      return;
+    }
+
+    if (this.route.snapshot.queryParamMap.get('status') === 'failure') {
       this.toast.error('El pago no se completó. No se te cobró nada.');
     }
   }

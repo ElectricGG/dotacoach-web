@@ -32,6 +32,11 @@ export class BillingApi {
     return this.http.post<CheckoutResponse>(`${this.base}/checkout`, body);
   }
 
+  /** Confirma la suscripción tras el redirect de MP (activa el tier del usuario). */
+  confirm(preapprovalId: string): Observable<SubscriptionStatusDto> {
+    return this.http.post<SubscriptionStatusDto>(`${this.base}/confirm`, { preapprovalId });
+  }
+
   cancel(): Observable<void> {
     return this.http.post<void>(`${this.base}/cancel`, {});
   }
