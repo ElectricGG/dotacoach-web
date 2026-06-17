@@ -14,8 +14,8 @@
   }
 
   <div class="plan-cards">
-    <article class="plan-card pro" [class.current]="user()?.tier === 'Pro'">
-      @if (user()?.tier === 'Pro') {
+    <article class="plan-card pro" [class.current]="status()?.tier === 'Pro'">
+      @if (status()?.tier === 'Pro') {
         <span class="current-badge">Plan actual</span>
       }
       <span class="plan-tag pro-tag">MENTOR PRO</span>
@@ -27,7 +27,7 @@
         <li>✓ Consultas de draft / counterpicks ilimitadas</li>
         <li>✓ Soporte prioritario</li>
       </ul>
-      @if (user()?.tier === 'Pro') {
+      @if (status()?.tier === 'Pro') {
         @if (status()?.canCancel) {
           <button
             class="btn btn-ghost btn-block"
