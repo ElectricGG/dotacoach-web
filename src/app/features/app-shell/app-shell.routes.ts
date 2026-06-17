@@ -41,11 +41,6 @@ export const appShellRoutes: Routes = [
         loadComponent: () =>
           import('../subscription/subscription.page').then((m) => m.SubscriptionPage),
       },
-      {
-        path: 'settings',
-        loadComponent: () =>
-          import('../settings/settings.page').then((m) => m.SettingsPage),
-      },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

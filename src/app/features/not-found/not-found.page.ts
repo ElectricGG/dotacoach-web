@@ -23,8 +23,7 @@ import { IonContent } from '@ionic/angular/standalone';
           </div>
           <p class="hint text-mute">
             Tip: si llegaste aquí desde un enlace viejo de una sesión, probablemente
-            ya no exista en el servidor. Limpia tu historial local desde
-            Configuración.
+            ya no exista en el servidor.
           </p>
         </div>
       </div>
