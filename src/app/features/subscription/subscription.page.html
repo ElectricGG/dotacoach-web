@@ -37,7 +37,13 @@
             {{ cancelLoading() ? 'Cancelando…' : 'Cancelar suscripción' }}
           </button>
         } @else {
-          <button class="btn btn-ghost btn-block" disabled>Tu plan actual</button>
+          <button
+            class="btn btn-primary btn-block"
+            [disabled]="checkoutLoading() === 'Pro'"
+            (click)="startCheckout('Pro')"
+          >
+            {{ checkoutLoading() === 'Pro' ? 'Redirigiendo…' : 'Volver a suscribirme' }}
+          </button>
         }
       } @else {
         <button
