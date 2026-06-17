@@ -55,6 +55,19 @@
   }
 
   <main class="app-main">
+    @if (subStatus(); as st) {
+      @if (st.inTrial) {
+        <a routerLink="/app/subscription" class="trial-banner trial-banner--info">
+          <span>🎁 Prueba gratis: {{ st.trialDaysLeft === 1 ? 'te queda 1 día' : 'te quedan ' + st.trialDaysLeft + ' días' }}. Suscríbete a Mentor Pro para no perder el acceso.</span>
+          <span class="trial-banner-cta">Suscribirme →</span>
+        </a>
+      } @else if (!st.hasAccess) {
+        <a routerLink="/app/subscription" class="trial-banner trial-banner--warn">
+          <span>⛔ Tu prueba terminó. Suscríbete a Mentor Pro para seguir usando DotaMentor.</span>
+          <span class="trial-banner-cta">Suscribirme →</span>
+        </a>
+      }
+    }
     <router-outlet></router-outlet>
   </main>
 </ion-content>

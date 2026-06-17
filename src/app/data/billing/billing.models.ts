@@ -17,6 +17,10 @@ export interface SubscriptionStatusDto {
   expiresAt: string | null;
   isActive: boolean;
   canCancel: boolean;
+  inTrial: boolean;
+  trialEndsAt: string | null;
+  trialDaysLeft: number;
+  hasAccess: boolean;
 }
 
 export interface CreateCheckoutRequest {

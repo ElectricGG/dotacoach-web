@@ -1,10 +1,12 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 
 import { ConfirmDialogService } from '../../core/services/confirm-dialog.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthStore } from '../../data/auth/auth.store';
+import { BillingApi } from '../../data/billing/billing.api';
+import { SubscriptionStatusDto } from '../../data/billing/billing.models';
 
 @Component({
   selector: 'app-shell',
@@ -13,14 +15,25 @@ import { AuthStore } from '../../data/auth/auth.store';
   templateUrl: './app-shell.component.html',
   styleUrls: ['./app-shell.component.scss'],
 })
-export class AppShellComponent {
+export class AppShellComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly toast = inject(ToastService);
+  private readonly billing = inject(BillingApi);
 
   readonly user = this.authStore.currentUser;
   readonly menuOpen = signal(false);
+  readonly subStatus = signal<SubscriptionStatusDto | null>(null);
+
+  ngOnInit(): void {
+    this.billing.getMyStatus().subscribe({
+      next: (s) => this.subStatus.set(s),
+      error: () => {
+        /* silencioso: el banner simplemente no se muestra */
+      },
+    });
+  }
 
   readonly userInitial = computed(() => {
     const email = this.user()?.email ?? '?';

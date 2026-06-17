@@ -276,3 +276,32 @@ ion-content {
   display: block;
   min-height: calc(100vh - 64px);
 }
+
+.trial-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: filter 0.15s ease;
+
+  &:hover { filter: brightness(1.08); }
+
+  .trial-banner-cta { text-decoration: underline; white-space: nowrap; }
+
+  &--info {
+    background: rgba(29, 185, 84, 0.12);
+    color: #1db954;
+    border-bottom: 1px solid rgba(29, 185, 84, 0.25);
+  }
+
+  &--warn {
+    background: rgba(229, 72, 72, 0.14);
+    color: #ff6b6b;
+    border-bottom: 1px solid rgba(229, 72, 72, 0.3);
+  }
+}

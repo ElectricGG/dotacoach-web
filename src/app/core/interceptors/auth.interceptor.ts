@@ -4,10 +4,12 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
 import { TokenStorageService } from '../services/token-storage.service';
+import { ToastService } from '../services/toast.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const storage = inject(TokenStorageService);
   const router = inject(Router);
+  const toast = inject(ToastService);
 
   // Solo tocamos calls a la API.
   const isApiCall = req.url.includes('/api/');
@@ -21,6 +23,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(outgoing).pipe(
     catchError((error: HttpErrorResponse) => {
+      // 402: prueba/suscripción vencida → al paywall.
+      if (isApiCall && error.status === 402) {
+        toast.error('Tu prueba terminó. Suscríbete para seguir usando DotaMentor.');
+        router.navigate(['/app/subscription']);
+      }
       if (isApiCall && error.status === 401) {
         const isAuthEndpoint = req.url.includes('/auth/');
         if (!isAuthEndpoint) {
