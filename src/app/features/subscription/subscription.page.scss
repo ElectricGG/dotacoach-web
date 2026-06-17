@@ -43,8 +43,9 @@
   display: grid;
   gap: l.$space-5;
   grid-template-columns: 1fr;
-
-  @media (min-width: l.$bp-md) { grid-template-columns: repeat(2, 1fr); }
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .plan-card {

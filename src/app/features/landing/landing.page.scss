@@ -356,13 +356,9 @@ ion-content {
   gap: l.$space-5;
   grid-template-columns: 1fr;
   margin-top: l.$space-10;
-  max-width: 720px;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
-
-  @media (min-width: l.$bp-md) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .plan-card {
