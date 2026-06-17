@@ -24,8 +24,7 @@ export interface CreateCheckoutRequest {
 }
 
 export interface CheckoutResponse {
-  preapprovalId: string;
-  initPoint: string;
+  url: string;
 }
 
 export interface PaymentHistoryItemDto {
