@@ -14,29 +14,6 @@
   }
 
   <div class="plan-cards">
-    <article class="plan-card free" [class.current]="user()?.tier === 'Free'">
-      @if (user()?.tier === 'Free') {
-        <span class="current-badge">Plan actual</span>
-      }
-      <span class="plan-tag">FREE</span>
-      <p class="plan-price">$0<span> / mes</span></p>
-      <ul class="plan-features">
-        <li>✓ 2 análisis al mes</li>
-        <li>✓ Hasta 5 mensajes por análisis</li>
-        <li>✓ Chat de seguimiento por 24 horas</li>
-        <li>✓ Soporte vía Discord</li>
-      </ul>
-      @if (user()?.tier === 'Free') {
-        <button class="btn btn-ghost btn-block" disabled>
-          Tu plan actual
-        </button>
-      } @else {
-        <button class="btn btn-ghost btn-block">
-          Cambiar a Free
-        </button>
-      }
-    </article>
-
     <article class="plan-card pro" [class.current]="user()?.tier === 'Pro'">
       @if (user()?.tier === 'Pro') {
         <span class="current-badge">Plan actual</span>
@@ -77,13 +54,8 @@
   <section class="info-section">
     <h3 class="text-h3">¿Por qué cobramos por Pro?</h3>
     <p class="text-subdued">
-      El análisis con IA tiene costo por cada partida (la API de Gemini se factura
-      por tokens consumidos). El plan Free se mantiene viable cubriendo los costos
-      con los usuarios Pro.
-    </p>
-    <p class="text-subdued">
-      Cuando habilitemos los pagos vas a poder cancelar cuando quieras, sin
-      permanencia ni letra chica.
+      El análisis con IA tiene un costo real por cada partida procesada. La
+      suscripción Pro nos permite cubrir esos costos y seguir mejorando el servicio.
     </p>
     <a href="mailto:soporte@dotacoach.app" class="link-accent">
       ¿Tienes sugerencias para Pro? Mándanos un correo →
