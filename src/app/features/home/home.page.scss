@@ -14,8 +14,9 @@
 
 .greeting {
   animation: fade-in-up a.$dur-slow a.$ease-out;
+  text-align: left;
 
-  .text-mute { display: block; margin-bottom: l.$space-2; }
+  .text-mute { display: block; text-align: left; margin-bottom: l.$space-2; }
 }
 
 // === Hero card ===
