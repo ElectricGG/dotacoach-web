@@ -41,6 +41,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/legal/terms.page').then((m) => m.TermsPage),
   },
+  {
+    path: 'privacidad',
+    loadComponent: () =>
+      import('./features/legal/privacy.page').then((m) => m.PrivacyPage),
+  },
 
   // App protegida
   {
