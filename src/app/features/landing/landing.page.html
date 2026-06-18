@@ -22,8 +22,9 @@
         <span class="accent">cuando lo necesites</span>
       </h1>
       <p class="hero-subtitle">
-        Pega tu ID de partida. La IA estudia tus items, tus muertes, tus peleas
-        y te dice exactamente qué mejorar — sin frases de manual.
+        Analiza tus partidas con IA y prepárate para la próxima: errores y consejos
+        post-partida, más contrapicks, builds y cómo jugar cada matchup. Sin frases
+        de manual.
       </p>
       <div class="hero-ctas">
         <a routerLink="/register" class="btn btn-primary btn-lg">
@@ -105,6 +106,42 @@
         </div>
         <div class="chat-message user" appAnimateOnScroll="slide-right" [animationDelay]="350">
           ¿Y si en vez de Mjollnir hubiera ido por Maelstrom + BKB primero?
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="game-assistant">
+    <div class="container">
+      <h2 class="text-h1 section-title" appAnimateOnScroll>Y antes de la partida: el Asistente de juego</h2>
+      <p class="text-subdued section-subtitle" appAnimateOnScroll [animationDelay]="100">
+        No solo analiza lo que ya pasó. En la fase de selección te ayuda a elegir
+        bien y a saber cómo encarar el matchup.
+      </p>
+      <div class="steps">
+        <div class="step" appAnimateOnScroll [animationDelay]="0">
+          <span class="step-number">🎯</span>
+          <h3 class="text-h3">Contrapicks por winrate</h3>
+          <p class="text-subdued">
+            Marca a los enemigos y te sugerimos los mejores héroes para
+            contrarrestarlos, según datos reales de winrate — no opiniones.
+          </p>
+        </div>
+        <div class="step" appAnimateOnScroll [animationDelay]="120">
+          <span class="step-number">🛡️</span>
+          <h3 class="text-h3">Builds: popular y con IA</h3>
+          <p class="text-subdued">
+            La build más usada por fase, o una build situacional con IA que elige
+            items según el lineup enemigo y te explica el porqué de cada uno.
+          </p>
+        </div>
+        <div class="step" appAnimateOnScroll [animationDelay]="240">
+          <span class="step-number">💬</span>
+          <h3 class="text-h3">Cómo jugar el matchup</h3>
+          <p class="text-subdued">
+            Chatea con el coach antes de entrar a la línea: laneo, mid game, late
+            game y qué amenazas priorizar contra tu lineup específico.
+          </p>
         </div>
       </div>
     </div>
